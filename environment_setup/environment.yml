@@ -51,5 +51,6 @@ dependencies:
     - decorator==4.4.2
     - networkx==2.4
     - scipy==1.4.1
+    - scikit-learn==0.23.0
 prefix: /cellar/users/asinghal/anaconda3/envs/pytorch3drugcell
 
