@@ -12,8 +12,8 @@ modeldir="${homedir}/models"
 if [ -d $modeldir ]
 then
         rm -rf $modeldir
-	mkdir $modeldir
 fi
+mkdir -p $modeldir
 
 cudaid=$2
 

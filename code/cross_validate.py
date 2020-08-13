@@ -19,7 +19,7 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 	epoch_start_time = time.time()
 	max_corr = 0
 
-	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim)
+	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim, CUDA_ID)
 	for name, param in model.named_parameters():
 		term_name = name.split('_')[0]
 		if '_direct_gene_layer.weight' in name:
@@ -29,8 +29,8 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 
 	train_label_gpu = torch.autograd.Variable(train_label.cuda(CUDA_ID))
 	val_label_gpu = torch.autograd.Variable(val_label.cuda(CUDA_ID))
-	train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size = data_wrapper.batch_size, shuffle = False)
-	val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size = data_wrapper.batch_size, shuffle = False)
+	train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size = data_wrapper.batchsize, shuffle = False)
+	val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size = data_wrapper.batchsize, shuffle = False)
 
 	optimizer = torch.optim.Adam(model.parameters(), lr = data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
 	optimizer.zero_grad()

@@ -15,8 +15,8 @@ hiddendir="${homedir}/hidden"
 if [ -d $hiddendir ]
 then
 	rm -rf $hiddendir
-	mkdir $hiddendir
 fi
+mkdir -p $hiddendir
 
 cudaid=$2
 
