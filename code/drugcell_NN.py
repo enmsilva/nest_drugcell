@@ -8,41 +8,43 @@ import torch.nn as nn
 import torch.nn.functional as F
 import util
 from util import *
+import training_data_wrapper
 
 
 class drugcell_nn(nn.Module):
 
-	def __init__(self, term_size_map, term_direct_gene_map, dG, ngene, ndrug, root, num_hiddens_genotype, num_hiddens_drug, num_hiddens_final):
+	def __init__(self, data_wrapper):
 	
 		super(drugcell_nn, self).__init__()
 
-		self.root = root
-		self.num_hiddens_genotype = num_hiddens_genotype
-		self.num_hiddens_drug = num_hiddens_drug
+		self.root = data_wrapper.root
+		self.num_hiddens_genotype = data_wrapper.num_hiddens_genotype
+		self.num_hiddens_drug = data_wrapper.num_hiddens_drug
 		
 		# dictionary from terms to genes directly annotated with the term
-		self.term_direct_gene_map = term_direct_gene_map   
+		self.term_direct_gene_map = data_wrapper.term_direct_gene_map
 
 		# calculate the number of values in a state (term): term_size_map is the number of all genes annotated with the term
-		self.cal_term_dim(term_size_map)		   
+		self.cal_term_dim(data_wrapper.term_size_map)		   
 		
 		# ngenes, gene_dim are the number of all genes	
-		self.gene_dim = ngene			   
-		self.drug_dim = ndrug
+		self.gene_dim = len(data_wrapper.gene_id_mapping)		   
+		self.drug_dim = len(data_wrapper.drug_features[0,:])
 
 		# add modules for neural networks to process genotypes
 		self.contruct_direct_gene_layer()
-		self.construct_NN_graph(dG)
+		self.construct_NN_graph(data_wrapper.dG)
 
 		# add modules for neural networks to process drugs	
 		self.construct_NN_drug()
 
 		# add modules for final layer
-		final_input_size = num_hiddens_genotype + num_hiddens_drug[-1]
-		self.add_module('final_linear_layer', nn.Linear(final_input_size, num_hiddens_final))
-		self.add_module('final_batchnorm_layer', nn.BatchNorm1d(num_hiddens_final))
-		self.add_module('final_aux_linear_layer', nn.Linear(num_hiddens_final,1))
+		final_input_size = self.num_hiddens_genotype + data_wrapper.num_hiddens_drug[-1]
+		self.add_module('final_linear_layer', nn.Linear(final_input_size, data_wrapper.num_hiddens_final))
+		self.add_module('final_batchnorm_layer', nn.BatchNorm1d(data_wrapper.num_hiddens_final))
+		self.add_module('final_aux_linear_layer', nn.Linear(data_wrapper.num_hiddens_final, 1))
 		self.add_module('final_linear_layer_output', nn.Linear(1, 1))
+
 
 	# calculate the number of values in a state (term)
 	def cal_term_dim(self, term_size_map):

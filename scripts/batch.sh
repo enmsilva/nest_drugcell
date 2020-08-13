@@ -5,5 +5,7 @@
 #SBATCH --nodelist=nrnb-6-0
 #SBATCH --dependency=singleton
 
-bash commandline_train.sh $1 $2
-bash commandline_test_gpu.sh $1 $2
+homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
+
+bash commandline_train.sh $homedir $1
+bash commandline_test_gpu.sh $homedir $1
