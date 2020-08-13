@@ -7,5 +7,5 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-bash commandline_train.sh $homedir $1
-bash commandline_test_gpu.sh $homedir $1
+bash "${homedir}/scripts/commandline_train.sh" $homedir $1
+bash "${homedir}/scripts/commandline_test_gpu.sh" $homedir $1
