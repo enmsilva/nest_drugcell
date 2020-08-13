@@ -1,7 +1,7 @@
 import argparse
 import time
 
-import sklearn.model_selection.KFold
+from sklearn.model_selection import KFold
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -17,7 +17,6 @@ CUDA_ID = 0
 def train_model(data_wrapper, model, train_feature, train_label, val_feature, val_label):
 
 	epoch_start_time = time.time()
-	best_model = 0
 	max_corr = 0
 
 	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim)
@@ -32,7 +31,7 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 	val_label_gpu = torch.autograd.Variable(val_label.cuda(CUDA_ID))
 	train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size = data_wrapper.batch_size, shuffle = False)
 	val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size = data_wrapper.batch_size, shuffle = False)
-	
+
 	optimizer = torch.optim.Adam(model.parameters(), lr = data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
 	optimizer.zero_grad()
 
@@ -109,11 +108,8 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 
 		if test_corr >= max_corr:
 			max_corr = test_corr
-			best_model = epoch
 
-	torch.save(model, data_wrapper.modeldir + '/model_final.pt')
-
-	print("Best performed model (epoch)\t%d" % best_model)
+	return max_corr
 
 
 def cross_validate(data_wrapper):
@@ -126,14 +122,19 @@ def cross_validate(data_wrapper):
 	model = drugcell_nn(data_wrapper)
 	model.cuda(CUDA_ID)
 
+	max_corr = 0
 	for fold, (train_index, val_index) in enumerate(kfold.split(train_features, train_labels)):
 
 		train_feature_fold = train_features[train_index]
 		train_label_fold = train_labels[train_index]
 		val_feature_fold = train_features[val_index]
 		val_label_fold = train_labels[val_index]
-		
-		train_model(data_wrapper, model, train_feature_fold, train_label_fold, val_feature_fold, val_label_fold)
+
+		max_corr_fold = train_model(data_wrapper, model, train_feature_fold, train_label_fold, val_feature_fold, val_label_fold)
+
+		if max_corr_fold >= max_corr:
+			torch.save(model, data_wrapper.modeldir + '/model_final.pt')
+			max_corr = max_corr_fold
 
 
 def main():
