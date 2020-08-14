@@ -17,6 +17,8 @@ CUDA_ID = 0
 def train_model(data_wrapper, model, train_feature, train_label, val_feature, val_label, fold):
 
 	epoch_start_time = time.time()
+	best_model = 0
+	max_corr = 0
 
 	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim, CUDA_ID)
 	for name, param in model.named_parameters():
@@ -42,7 +44,7 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 
 		for i, (inputdata, labels) in enumerate(train_loader):
 			# Convert torch tensor to Variable
-			features = build_input_vector(inputdata, data_wrapper.cell_features, data_wrapper.drug_features)
+			features = util.build_input_vector(inputdata, data_wrapper.cell_features, data_wrapper.drug_features)
 
 			cuda_features = torch.autograd.Variable(features.cuda(CUDA_ID))
 			cuda_labels = torch.autograd.Variable(labels.cuda(CUDA_ID))
@@ -80,7 +82,7 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 		train_corr = util.pearson_corr(train_predict, train_label_gpu)
 
 		# if epoch % 10 == 0:
-		torch.save(model, data_wrapper.modeldir + '/model_' + str(fold) + '_' + str(epoch) + '.pt')
+		#torch.save(model, data_wrapper.modeldir + '/model_' + str(fold) + '_' + str(epoch) + '.pt')
 
 		# Test: random variables in training mode become static
 		model.eval()
@@ -105,10 +107,15 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 		print("fold\t%d\tepoch\t%d\ttrain_corr\t%.6f\tval_corr\t%.6f\ttotal_loss\t%.6f\telapsed_time\t%s" % (fold, epoch, train_corr, test_corr, total_loss, epoch_end_time - epoch_start_time))
 		epoch_start_time = epoch_end_time
 
+		if test_corr >= max_corr:
+			max_corr = test_corr
+			
+	return max_corr
 
 
 def cross_validate(data_wrapper):
 
+	max_corr = 0
 	kfold = KFold(n_splits = 5)
 
 	train_features, train_labels = data_wrapper.train_data
@@ -122,9 +129,10 @@ def cross_validate(data_wrapper):
 		train_label_fold = train_labels[train_index]
 		val_feature_fold = train_features[val_index]
 		val_label_fold = train_labels[val_index]
-		train_model(data_wrapper, model, train_feature_fold, train_label_fold, val_feature_fold, val_label_fold, fold)
-
-	torch.save(model, data_wrapper.modeldir + '/model_final.pt')
+		
+		max_corr_fold = train_model(data_wrapper, model, train_feature_fold, train_label_fold, val_feature_fold, val_label_fold, fold)
+		if max_corr_fold >= max_corr:
+			torch.save(model, data_wrapper.modeldir + '/model_final.pt')
 
 
 def main():
@@ -134,7 +142,7 @@ def main():
 	parser = argparse.ArgumentParser(description = 'Train dcell')
 	parser.add_argument('-onto', help = 'Ontology file used to guide the neural network', type = str)
 	parser.add_argument('-train', help = 'Training dataset', type = str)
-	parser.add_argument('-epoch', help = 'Training epochs for training', type = int, default = 100)
+	parser.add_argument('-epoch', help = 'Training epochs for training', type = int, default = 200)
 	parser.add_argument('-lr', help = 'Learning rate', type = float, default = 0.001)
 	parser.add_argument('-batchsize', help = 'Batchsize', type = int, default = 5000)
 	parser.add_argument('-modeldir', help = 'Folder for trained models', type = str, default = 'MODEL/')
@@ -147,6 +155,7 @@ def main():
 	parser.add_argument('-final_hiddens', help = 'The number of neurons in the top layer', type = int, default = 6)
 	parser.add_argument('-genotype', help = 'Mutation information for cell lines', type = str)
 	parser.add_argument('-fingerprint', help = 'Morgan fingerprint representation for drugs', type = str)
+	parser.add_argument('-blackboxnn', help = 'Run block box NN', type = int, default = 0)
 
 	opt = parser.parse_args()
 	training_data_wrapper = TrainingDataWrapper(opt)
