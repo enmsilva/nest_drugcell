@@ -24,4 +24,4 @@ source activate pytorch3drugcell
 python -u $pyScript -onto $ontfile -gene2id $gene2idfile -drug2id $drug2idfile \
 	-cell2id $cell2idfile -train $traindatafile -genotype $mutationfile -fingerprint $drugfile \
 	-genotype_hiddens 6 -drug_hiddens '100,50,6' -final_hiddens 6 -model $modeldir \ 
-	-cuda $cudaid -batchsize 5000 -epoch 200 -blackboxnn 0 -cross_val 0 > train.log
+	-cuda $cudaid -batchsize 5000 -epoch 200 -cross_val 0 > train.log

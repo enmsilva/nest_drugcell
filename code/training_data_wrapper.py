@@ -3,7 +3,6 @@ import numpy as np
 import networkx as nx
 import networkx.algorithms.components.connected as nxacc
 import networkx.algorithms.dag as nxadag
-import random
 
 import util
 
@@ -28,11 +27,6 @@ class TrainingDataWrapper():
 		self.load_ontology(args.onto)
 
 		self.train_data = util.prepare_train_data(args.train, self.cell_id_mapping, self.drug_id_mapping)
-		
-		if args.blackboxnn == 1:
-			temp = np.transpose(self.cell_features)
-			np.random.shuffle(temp)
-			self.cell_features = np.transpose(temp)
 
 
 	def load_ontology(self, file_name):

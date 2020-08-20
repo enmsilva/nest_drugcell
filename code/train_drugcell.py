@@ -169,7 +169,6 @@ def main():
 	parser.add_argument('-final_hiddens', help = 'The number of neurons in the top layer', type = int, default = 6)
 	parser.add_argument('-genotype', help = 'Mutation information for cell lines', type = str)
 	parser.add_argument('-fingerprint', help = 'Morgan fingerprint representation for drugs', type = str)
-	parser.add_argument('-blackboxnn', help = 'Run block box NN', type = int, default = 0)
 	parser.add_argument('-cross_val', help = 'Run Cross Validation', type = int, default = 0)
 
 	opt = parser.parse_args()
