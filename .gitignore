@@ -1,5 +1,7 @@
 data/
 result/
+result_cv/
+result_bb/
 hidden/
 models/
 code/__pycache__/
