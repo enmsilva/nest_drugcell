@@ -139,7 +139,7 @@ def cross_validate(data_wrapper):
 def exec_training(data_wrapper):
 
 	train_features, train_labels = data_wrapper.train_data
-	train_feat, val_feat, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.05, shuffle = False)
+	train_feat, val_feat, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.01, shuffle = False)
 
 	# Create the neural network
 	model = drugcell_nn(data_wrapper)

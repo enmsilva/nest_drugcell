@@ -6,7 +6,7 @@ drug2idfile="${homedir}/data/drug2ind.txt"
 ontfile="${homedir}/data/drugcell_ont.txt"
 mutationfile="${homedir}/data/cell2mutation.txt"
 drugfile="${homedir}/data/drug2fingerprint.txt"
-traindatafile="${homedir}/data/drugcell_all.txt"
+traindatafile="${homedir}/data/${2}_drugcell_train.txt"
 
 modeldir="${homedir}/models"
 if [ -d $modeldir ]

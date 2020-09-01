@@ -8,5 +8,5 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-bash "${homedir}/scripts/commandline_train.sh" $homedir
-bash "${homedir}/scripts/commandline_test_gpu.sh" $homedir
+bash "${homedir}/scripts/cv_train.sh" $homedir $1
+bash "${homedir}/scripts/cv_test_gpu.sh" $homedir $1
