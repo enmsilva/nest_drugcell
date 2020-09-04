@@ -1,7 +1,5 @@
 data/
 result/
-result_cv/
-result_bb/
 hidden/
 models/
 code/__pycache__/
@@ -10,3 +8,4 @@ code/__pycache__/
 .pydevproject
 .vscode/
 code/.ipynb_checkpoints/
+rlipp/
