@@ -6,5 +6,5 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-python -u "${homedir}/code/rlipp_analysis.py" $homedir
+bash "${homedir}/scripts/rlipp_exec.sh" $homedir
 
