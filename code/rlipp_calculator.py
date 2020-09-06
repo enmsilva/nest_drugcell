@@ -56,9 +56,9 @@ class RLIPPCalculator():
     def load_all_features(self):
         feature_map = {}
         for t in self.terms:
-            feature_map[t] = load_feature(t, 6)
+            feature_map[t] = self.load_feature(t, 6)
         for g in self.genes:
-            feature_map[g] = load_feature(g, 1)
+            feature_map[g] = self.load_feature(g, 1)
         return feature_map
 
 
@@ -66,7 +66,7 @@ class RLIPPCalculator():
         child_features = []
         children = [row['T'] for _,row in self.ontology.iterrows() if row['S']==term]
         for child in children:
-            child_features.append(np.take(feature_map[child], index_list))
+            child_features.append(np.take(feature_map[child], index_list, axis=0))
         return np.column_stack((f for f in child_features))
 
 
@@ -78,7 +78,7 @@ class RLIPPCalculator():
 
 
     def calc_scores(self):
-    
+        print('Starting score calculation')
         outf = open(self.out_file, "w")
         outf.write('Drug\tTerm\tP_rho\tC_rho\tRLIPP\n')
         
@@ -86,16 +86,17 @@ class RLIPPCalculator():
         sorted_drugs = self.sort_drugs_corr(drug_pos_map).keys()
         
         feature_map = self.load_all_features()
-    
-        for d in sorted_drugs:
+        print('feature map created')
+        for i,d in enumerate(sorted_drugs):
             y = np.take(self.predicted_vals, drug_pos_map[d])
             for t in self.terms:
-                X_parent = np.take(feature_map[t], drug_pos_map[d])
+                X_parent = np.take(feature_map[t], drug_pos_map[d], axis=0)
                 X_child = self.get_child_features(feature_map, t, drug_pos_map[d])
                 p_rho = self.exec_lm(X_parent, y)
                 c_rho = self.exec_lm(X_child, y)
                 rlipp = (p_rho - c_rho)/c_rho
                 result = '{}\t{}\t{:.3f}\t{:.3f}\t{:.3f}\n'.format(d, t, p_rho, c_rho, rlipp)
                 outf.write(result)
+            print('Drug ' + str(i+1) + ' complete!')
         outf.close()
 

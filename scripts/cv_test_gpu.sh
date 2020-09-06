@@ -28,4 +28,4 @@ python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2i
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultdir \
 	-predict $testdatafile -load $modelfile -cuda $cudaid > test.log
 
-cp ${resultdir}/drugcell.predict ${resultdir}/${2}_drugcell.predict
+mv ${resultdir}/drugcell.predict ${resultdir}/${2}_drugcell.predict
