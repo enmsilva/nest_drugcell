@@ -20,7 +20,7 @@ mkdir -p $hiddendir
 
 cudaid=0
 
-pyScript="${homedir}/code/predict_drugcell.py"
+pyScript="${homedir}/src/predict_drugcell.py"
 
 source activate pytorch3drugcell
 
