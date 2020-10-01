@@ -17,5 +17,5 @@ mkdir -p $rlippdir
 
 python -u ${homedir}/code/rlipp_helper.py -hidden $hidden -ontology $ontology \
 	-drug_index $drug_index -gene_index $gene_index -cell_index $cell_index \
-	-cell_mutation $cell_mutation -output $output -test $test -predicted $predicted
+	-cell_mutation $cell_mutation -output $output -test $test -predicted $predicted -drug_count 50
 

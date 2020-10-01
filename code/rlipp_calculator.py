@@ -14,9 +14,14 @@ class RLIPPCalculator():
         self.cell_index = pd.read_csv(args.cell_index, sep="\t", header=None, names=['I', 'C'])
         self.cell_mutation = np.loadtxt(args.cell_mutation, delimiter=',')
         self.out_file = args.output
+        
         self.hidden_dir = args.hidden
         if not self.hidden_dir.endswith('/'):
             self.hidden_dir += '/'
+        
+        self.drug_count = args.drug_count
+        if self.drug_count == 0:
+            self.drug_count = len(drugs)
         
         self.terms = self.ontology['S'].unique().tolist()
         
@@ -87,7 +92,9 @@ class RLIPPCalculator():
         
         feature_map = self.load_all_features()
     
-        for d in sorted_drugs:
+        for i,d in enumerate(sorted_drugs):
+            if i == self.drug_count:
+                break
             y = np.take(self.predicted_vals, drug_pos_map[d])
             for t in self.terms:
                 X_parent = np.take(feature_map[t], drug_pos_map[d])
