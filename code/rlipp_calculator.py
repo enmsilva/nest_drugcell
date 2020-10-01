@@ -83,7 +83,7 @@ class RLIPPCalculator():
 
 
     def calc_scores(self):
-    
+        print('Starting score calculation')
         outf = open(self.out_file, "w")
         outf.write('Drug\tTerm\tP_rho\tC_rho\tRLIPP\n')
         
@@ -91,7 +91,7 @@ class RLIPPCalculator():
         sorted_drugs = self.sort_drugs_corr(drug_pos_map).keys()
         
         feature_map = self.load_all_features()
-    
+        print('feature map created')
         for i,d in enumerate(sorted_drugs):
             if i == self.drug_count:
                 break
@@ -104,5 +104,6 @@ class RLIPPCalculator():
                 rlipp = (p_rho - c_rho)/c_rho
                 result = '{}\t{}\t{:.3f}\t{:.3f}\t{:.3f}\n'.format(d, t, p_rho, c_rho, rlipp)
                 outf.write(result)
+            print('Drug ' + str(i+1) + ' complete!')
         outf.close()
 
