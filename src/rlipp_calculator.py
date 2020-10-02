@@ -71,7 +71,7 @@ class RLIPPCalculator():
         child_features = []
         children = [row['T'] for _,row in self.ontology.iterrows() if row['S']==term]
         for child in children:
-            child_features.append(np.take(feature_map[child], index_list))
+            child_features.append(np.take(feature_map[child], index_list, axis=0))
         return np.column_stack((f for f in child_features))
 
 
@@ -97,7 +97,7 @@ class RLIPPCalculator():
                 break
             y = np.take(self.predicted_vals, drug_pos_map[d])
             for t in self.terms:
-                X_parent = np.take(feature_map[t], drug_pos_map[d])
+                X_parent = np.take(feature_map[t], drug_pos_map[d], axis=0)
                 X_child = self.get_child_features(feature_map, t, drug_pos_map[d])
                 p_rho = self.exec_lm(X_parent, y)
                 c_rho = self.exec_lm(X_child, y)
