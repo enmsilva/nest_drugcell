@@ -61,9 +61,9 @@ class RLIPPCalculator():
     def load_all_features(self):
         feature_map = {}
         for t in self.terms:
-            feature_map[t] = load_feature(t, 6)
+            feature_map[t] = self.load_feature(t, 6)
         for g in self.genes:
-            feature_map[g] = load_feature(g, 1)
+            feature_map[g] = self.load_feature(g, 1)
         return feature_map
 
 
