@@ -1,0 +1,319 @@
+Name,RLIPP Score,Rank,Term,Type
+Transcription coactivator activity,39.661,1.0,23101,Regulation of transcription
+Control of cell-matrix interaction and angiogenesis,35.775,2.0,22123,Cell motility
+VEGF and receptors,26.639,3.0,21544,Immune systems
+Nuclear pore part III,11.672,4.0,22310,
+"Collagen I, III, V",11.14,5.0,22105,Cell motility
+BRCA1-IRIS-pre-replication complex,7.584,6.0,22420,Cell cycle
+Regulation of actin-filament dynamics,7.558,7.0,23017,Cell motility
+Cyclin-dependent protein kinase holoenzyme complex,6.989,8.0,23216,Cell cycle
+SMC5/6 and condensin co-complex,6.374,9.0,23153,
+Regulation of TP53 Activity,5.731,10.0,23228,Regulation of transcription
+NEST:65,5.183,11.0,23278,Regulation of transcription
+Catenin E-cadherin interaction,4.901,12.0,21988,Signaling
+DNA replication-dependent nucleosome assembly,4.63,13.0,23268,Cell cycle
+Regulation of Rac/Rho signaling,4.162,14.0,22766,Cell motility
+EGFR-insulin receptor cross-talk,3.609,15.0,22491,Protein modification
+RBL-TP53 complex,2.327,16.0,22303,Cell cycle
+PIK3CA-actomyosin complex II,2.2880000000000003,17.0,23200,Cell motility
+Non-sense mediated MRN decay,2.097,18.0,22254,mRNA processing
+NEST:203,2.046,19.0,22486,
+Blood microparticles,1.63,20.0,23319,Metabolism
+Protein ubiquitination,1.615,21.0,23313,Protein modification
+JNK pathway regulation of TP53,1.4669999999999999,22.0,23165,Protein modification
+MutLalpha complex,1.329,23.0,21978,Cell cycle
+AKT1 activation,1.222,24.0,23090,Signaling
+Directing Hsp90 to its target kinases,1.182,25.0,23244,
+PGAM5-KEAP1-NRF2 complex,1.15,26.0,22772,Protein modification
+IL-6 family signaling,1.036,27.0,22694,Signaling
+MTOR complex,0.8490000000000001,28.0,23039,Signaling
+JNK signaling part III,0.746,29.0,22662,Protein modification
+NEST:293,0.7170000000000001,30.0,21523,
+G1 to S cell cycle control,0.64,31.0,23111,Cell cycle
+Cornified envelope part,0.61,32.0,22218,
+Microfibril-collagen assembly,0.605,33.0,22830,Cell motility
+NEST:319,0.57,34.0,21702,
+Laminin collagen interfaces,0.568,35.0,21593,Cell motility
+BRCC/BLM complex,0.564,36.0,21951,Cell cycle
+Protein phosphatase regulator activity,0.524,37.0,23293,
+CCR4-NOT regulation of IKK/NF-kappaB pathway,0.511,38.0,21513,
+EGFR/beta-catenin crosstalk,0.38799999999999996,39.0,22379,Signaling
+"Collagens I, III, V, VI",0.382,40.0,22808,Cell motility
+NEST:195,0.38,41.0,22783,Protein modification
+3M complex,0.325,42.0,21957,
+Cohesin complex,0.324,43.0,22804,mRNA processing
+Muscle filament sliding,0.313,44.0,21603,
+BH3 domain binding,0.31,45.0,21958,Protein modification
+TATA-Box binding protein associated factors,0.28,46.0,23284,Regulation of transcription
+NEST:66,0.233,47.0,cut0-15-Louv55,
+BAF complex subunit,0.203,48.0,22033,mRNA processing
+NEST:172,0.18100000000000002,49.0,22835,Cell motility
+JNK signaling part II,0.15,50.0,21542,Protein modification
+Metaphase-anaphase transition,0.09300000000000001,51.0,22744,Cell cycle
+RAS-ERBB-FGFR,0.086,52.0,22510,Cell motility
+Extended beta-catenin destruction complex II,0.078,53.0,23058,Signaling
+"Ubiquitin E3 ligase (SKP1, BTRC, FBXW11)",0.064,54.0,23120,Protein modification
+HRAS activates RAF,0.06,55.0,21820,Signaling
+NEST:202,0.008,56.0,22485,Signaling
+Fibrinolysis,0.006999999999999999,57.0,23071,Metabolism
+NEST:242,0.001,58.0,22200,Cell motility
+3-hydroxyacyl-CoA dehydrogenase activity,0.0,59.0,22692,
+Inflammasome complex,-0.0,60.0,21467,Immune systems
+Coatomer protein complex subunit,-0.0,61.0,22480,
+Ephrin signaling,0.0,62.0,21383,Signaling
+RNAse L activation,0.0,63.0,21449,Immune systems
+SMAD4-SMAD2-SMAD3 complex,-0.005,64.0,22568,Protein modification
+RNAse L activation II,-0.046,65.0,22113,Immune systems
+Nucleoplasm I,-0.057,66.0,cut0-18-Louv7,
+ROOT,-0.059000000000000004,67.0,ROOT,
+Nuclear pore part I,-0.06,68.0,23135,
+Beta-catenin-TCF complex,-0.086,69.0,23012,Signaling
+Beta-catenin destruction complex/HLA crosstalk,-0.08800000000000001,70.0,22587,Signaling
+Extended beta-catenin destruction complex I,-0.106,71.0,22939,Signaling
+Peptidase complex,-0.106,72.0,cut0-27-Louv15,
+MAPK signaling,-0.129,73.0,23297,Signaling
+MAPK and MAP2K activation,-0.145,74.0,23262,Signaling
+TP53 regulates transcription of cell cycle genes,-0.159,75.0,23068,Cell cycle
+RNA N6-methyladenosine methyltransferase complex,-0.166,76.0,21772,mRNA processing
+Pre-mRNA splicing subcomplex,-0.19,77.0,22350,mRNA processing
+"Phosphatidylinositol 3-kinase complex, class III",-0.193,78.0,22028,
+SUMOylation for nuclear transport,-0.19899999999999998,79.0,23289,
+Intrinsic pathway for apoptosis,-0.22,80.0,23196,Protein modification
+Caspase activation via extrinsic apoptotic signalling pathway,-0.22899999999999998,81.0,22875,Protein modification
+CUL-RING ubiquitin ligase complex,-0.249,82.0,23159,
+Interferon signaling,-0.253,83.0,cut0-3-Louv28,Immune systems
+Regulation of CDK activity,-0.267,84.0,23314,Cell cycle
+Cell cycle,-0.27899999999999997,85.0,cut0-15-Louv15,Cell cycle
+Regulation of transcription,-0.28300000000000003,86.0,cut0-3-Louv4,Regulation of transcription
+Protein modification,-0.293,87.0,cut0-27-Louv0,Protein modification
+Cell cycle arrest,-0.293,88.0,23312,Cell cycle
+HDACs deacetylate histones,-0.295,89.0,23254,Regulation of transcription
+mRNA 3'-end processing,-0.299,90.0,23203,mRNA processing
+Resolution of D-loop structures,-0.3,91.0,22986,Cell cycle
+BAF core complex,-0.303,92.0,23107,mRNA processing
+Spliceosomal tri-snRNP complex assembly,-0.366,93.0,23270,mRNA processing
+Cell motility,-0.379,94.0,cut0-21-Louv4,Cell motility
+NEST:69,-0.38,95.0,23277,Cell cycle
+SCF ubiquitin E3 ligase/COP9 signalosome aggregate,-0.381,96.0,23298,
+Regulation of transcription III,-0.38299999999999995,97.0,cut0-24-Louv21,Regulation of transcription
+NEST:286,-0.384,98.0,21497,Cell motility
+Transcription elongation,-0.402,99.0,23326,Regulation of transcription
+Signaling,-0.408,100.0,cut0-24-Louv4,Signaling
+Histone ubiquitination and organization,-0.428,101.0,23248,Regulation of transcription
+Adherens junction,-0.431,102.0,23260,Signaling
+Ribosome biogenesis,-0.431,103.0,23339,
+Immune systems,-0.44299999999999995,104.0,cut0-15-Louv3,Immune systems
+Nucleoplasm II,-0.447,105.0,cut0-15-Louv10,
+Adherens junction components,-0.451,106.0,22928,Signaling
+mRNA processing,-0.45399999999999996,107.0,cut0-24-Louv10,mRNA processing
+Vesicle-mediated transport,-0.456,108.0,cut0-24-Louv7,
+Epithelium development,-0.457,109.0,cut0-15-Louv7,
+NEST:9,-0.46299999999999997,110.0,cut0-15-Louv8,
+Non-canonical BAF complex,-0.47100000000000003,111.0,22235,mRNA processing
+Regulation of cell polarity,-0.478,112.0,cut0-24-Louv24,
+Rho GTPases acitvating ROCKs,-0.491,113.0,23030,Cell motility
+Contractile fiber,-0.49700000000000005,114.0,23303,
+Mediator and mixed-lineage-leukemia (MLL) proteins,-0.499,115.0,cut0-3-Louv29,Regulation of transcription
+Complement activation alternative pathway II,-0.505,116.0,21813,Metabolism
+Regulation of E2F transcription via DREAM complex,-0.506,117.0,23208,Signaling
+Homologous recombination,-0.507,118.0,23202,Cell cycle
+Extracellular matrix constituent,-0.508,119.0,23286,Cell motility
+Spliceosomal-snRNP complex,-0.522,120.0,23332,mRNA processing
+Chromatin organization,-0.524,121.0,cut0-21-Louv16,
+Protein degradation,-0.524,122.0,cut0-27-Louv20,
+Histone methyltransferase complex,-0.531,123.0,23242,Regulation of transcription
+NEST:14,-0.534,124.0,cut0-15-Louv16,
+NEST:25,-0.537,125.0,cut0-27-Louv22,
+Nucleosome remodeling,-0.5479999999999999,126.0,23317,Regulation of transcription
+Nucleoporins,-0.5539999999999999,127.0,23226,
+Catenin/Cadherins,-0.555,128.0,22713,Signaling
+DNA metabolic process,-0.557,129.0,23334,Cell cycle
+Translation initiation factors,-0.557,130.0,cut0-21-Louv21,
+NEST:283,-0.5579999999999999,131.0,21481,Cell motility
+Ribonucleoprotein complexes,-0.5589999999999999,132.0,23338,
+Protein folding,-0.5710000000000001,133.0,cut0-3-Louv9,
+Lymphocyte-endothelium interaction,-0.5770000000000001,134.0,22633,Immune systems
+Calcium signaling,-0.586,135.0,cut0-21-Louv20,
+Actin filaments,-0.601,136.0,23329,Cell motility
+Peroxisome and lipid metabolisms,-0.613,137.0,cut0-3-Louv12,
+NEST:149,-0.613,138.0,22989,Signaling
+Activation of protein kinase A activity,-0.626,139.0,23049,Signaling
+Rho signaling,-0.635,140.0,23271,Cell motility
+Spliceosome,-0.639,141.0,23318,mRNA processing
+Actin-tropomyosin,-0.642,142.0,22943,Cell motility
+PIK3CA-actomyosin membrane complex,-0.652,143.0,23080,Cell motility
+Regulation of transcription II,-0.654,144.0,cut0-27-Louv23,Regulation of transcription
+Cyclin CDK12/13 complex,-0.6579999999999999,145.0,21668,Regulation of transcription
+Phospholipase D regulation,-0.6659999999999999,146.0,22215,Cell motility
+P-body,-0.672,147.0,cut0-3-Louv23,
+Transmembrane receptor tyrosine kinase signaling,-0.672,148.0,23330,Signaling
+Metabolism,-0.685,149.0,cut0-3-Louv6,Metabolism
+Full desmosome and keratinization,-0.688,150.0,cut0-18-Louv25,
+Retinoid metabolism and transport,-0.716,151.0,22070,Protein modification
+Mediator complex,-0.728,152.0,23264,Regulation of transcription
+PcG protein complex,-0.73,153.0,cut0-3-Louv31,
+Non-recombinational repair,-0.747,154.0,23322,Cell cycle
+Basement membrane collagens,-0.757,155.0,21557,Cell motility
+Fibrillar collagens,-0.767,156.0,23016,Cell motility
+Nuclear transport,-0.777,157.0,cut0-27-Louv26,
+Recombinational repair,-0.799,158.0,23302,Cell cycle
+Protein neddylation,-0.815,159.0,23237,
+ECM-cytoskeleton assembly,-0.828,160.0,23324,Cell motility
+Erb and JAK-STAT signaling,-0.835,161.0,23276,Signaling
+Mitochondrion,-0.8540000000000001,162.0,cut0-15-Louv5,
+Chemokine mediated migration and activation,-0.86,163.0,23114,Immune systems
+EGF/beta-catenin signaling,-0.8759999999999999,164.0,23170,Signaling
+Interleukin-6 family signaling,-0.879,165.0,23000,Signaling
+Actin and actin-associated proteins,-0.895,166.0,23311,Cell motility
+NEST:276,-0.903,167.0,21442,Cell motility
+TNF signaling pathway,-0.904,168.0,23279,Protein modification
+Complement and coagulation cascades,-0.922,169.0,23305,Metabolism
+Condensin I complex,-0.927,170.0,21938,Cell cycle
+Cohesin/BAF complex association,-0.932,171.0,22827,mRNA processing
+Lymphocyte activation,-0.937,172.0,23335,Immune systems
+WAVE regulatory complex,-0.9390000000000001,173.0,22836,Cell motility
+Oxoglutarate dehydrogenase complex,-0.9540000000000001,174.0,22902,
+U2-type catalytic step 2 spliceosome,-0.981,175.0,22469,mRNA processing
+Chromodomain helicase DNA binding,-1.038,176.0,21765,mRNA processing
+Nuclear pore part IV,-1.047,177.0,22896,
+Beta-catenin destruction complex,-1.053,178.0,22384,Signaling
+NEST:312,-1.085,179.0,21643,mRNA processing
+Proteasome machinery,-1.089,180.0,cut0-3-Louv18,
+NEST:130,-1.117,181.0,23069,mRNA processing
+Localization of superoxide-producing phagocyte via membrane rafts,-1.119,182.0,21688,Immune systems
+BAF (SWI/SNF) complex,-1.135,183.0,23163,mRNA processing
+Extended TOR complex,-1.15,184.0,23157,Signaling
+Extended BAF (SWI/SNF) complex,-1.173,185.0,23230,mRNA processing
+Platelet-derived growth factor binding,-1.175,186.0,22245,Cell motility
+FBXW7-mediator association,-1.195,187.0,21758,Regulation of transcription
+basement membrane components,-1.196,188.0,23070,Cell motility
+Histone modifications in DNA damage response,-1.197,189.0,23085,
+PP2A-type phosphatase family,-1.199,190.0,23253,
+Regulation of telomere length by TIP60-HAT complex,-1.2229999999999999,191.0,22641,Regulation of transcription
+NEST:252,-1.236,192.0,22255,
+Fibronectin-collagen,-1.238,193.0,22370,Cell motility
+NEST:199,-1.256,194.0,22459,Protein modification
+U2 snRNP extended,-1.26,195.0,22996,mRNA processing
+NEST:326,-1.274,196.0,21745,Regulation of transcription
+Phagocytic vesicle,-1.278,197.0,23296,Immune systems
+RPA complex associated proteins,-1.278,198.0,23201,
+Chaperone-containing T-complex,-1.298,199.0,23275,
+GRB7 events in ERBB2 signaling,-1.347,200.0,21613,Cell motility
+Vitamin D binding protein and thrombosis,-1.4140000000000001,201.0,22238,Metabolism
+Cohesin core complex,-1.42,202.0,22538,mRNA processing
+MutS homologs,-1.4280000000000002,203.0,22763,Cell cycle
+MPP7-DLG1-LIN7 polarity complex,-1.431,204.0,23047,Signaling
+BAF complex subunit II,-1.508,205.0,22537,mRNA processing
+Pre-mRNA splicing complex part II,-1.521,206.0,23146,mRNA processing
+RNA pol II-BAF complex association,-1.541,207.0,22148,mRNA processing
+Lymphocyte cell-cell adhesion,-1.5419999999999998,208.0,23105,Immune systems
+Regulation of androgen receptor signaling pathway,-1.5519999999999998,209.0,22877,Regulation of transcription
+Laminar architecture in ectoderm-derived organ development,-1.554,210.0,21661,Cell motility
+NEST:304,-1.557,211.0,21572,Regulation of transcription
+Collagen subset,-1.5730000000000002,212.0,21446,Cell motility
+T cell receptor complex,-1.6,213.0,23091,Immune systems
+NEST:150,-1.607,214.0,22993,Regulation of transcription
+NEST:334,-1.632,215.0,21777,Cell motility
+NEST:114,-1.64,216.0,23134,Regulation of transcription
+Cytosolic ribosome,-1.6469999999999998,217.0,23325,
+Regulatory feedback loops in autophagy via inhibition of mTORC1,-1.656,218.0,21527,Protein modification
+NEST:321,-1.704,219.0,21708,Regulation of transcription
+"PR-DUB complex, histone ubiquitination",-1.722,220.0,22745,Regulation of transcription
+AKT event on TSC1-TSC2 complex,-1.75,221.0,21487,Signaling
+NEST:260,-1.767,222.0,22326,
+Cytosolic iron-sulfur cluster assembly,-1.7690000000000001,223.0,22968,
+NEST:234,-1.771,224.0,22151,Immune systems
+Exocyst complex,-1.791,225.0,21873,
+Activation of gene expression by SREBF (SREBP),-1.827,226.0,22193,Signaling
+NEST:313,-1.828,227.0,21644,mRNA processing
+CHD-mediated centrosome integrity,-1.835,228.0,21533,Regulation of transcription
+LXR/RXR activation,-1.871,229.0,22959,Metabolism
+Actinin1/4,-1.879,230.0,21989,Cell motility
+Platelet degranulation,-1.899,231.0,23287,Metabolism
+PIK3CA-actomyosin membrane complex part,-1.9380000000000002,232.0,22403,Cell motility
+Clathrin-coated vesicle,-1.939,233.0,22937,Cell motility
+AKAP-centrosome pathway,-1.946,234.0,21410,Signaling
+NEST:263,-1.95,235.0,22347,Cell cycle
+Golgi cisternae pericentriolar stack reorganization,-1.956,236.0,21522,
+RBPJ-NOTCH1-MAML1 complex,-1.964,237.0,21853,Signaling
+CDK8-MED12/13 complex,-1.966,238.0,21925,Regulation of transcription
+PIK3/AKT/PTEN signaling,-1.9680000000000002,239.0,23193,Signaling
+PRC1 complex,-1.9709999999999999,240.0,23192,Regulation of transcription
+Notch1-GSK3b crosstalk,-1.98,241.0,22247,Signaling
+NEST:238,-1.996,242.0,22186,
+NEST:219,-1.9980000000000002,243.0,22044,
+Integrin associated focal adhesion proteins,-2.0,244.0,21680,Cell motility
+TORC1 complex,-2.0,245.0,21521,Protein modification
+NEST:307,-2.0,246.0,21601,Regulation of transcription
+JAK-SHP2,-2.0,247.0,21850,Signaling
+AKT-TOR signaling,-2.0,248.0,21394,Signaling
+Centrosomal kinesins,-2.009,249.0,22374,Cell cycle
+Proteasome subunit,-2.01,250.0,21941,
+ERBB/FGFR growth receptor dimers,-2.015,251.0,21615,Cell motility
+Regulation of lamellipodium assembly,-2.017,252.0,22153,Cell motility
+Transcription export complex,-2.026,253.0,23077,mRNA processing
+NEST:241,-2.029,254.0,22199,Regulation of transcription
+Component of nBAF complex,-2.03,255.0,21940,mRNA processing
+Spliceosome B complex,-2.036,256.0,21805,mRNA processing
+Mediator subcomplex,-2.055,257.0,22753,Regulation of transcription
+SS18L1 subunit of BAF chromatin remodeling complex,-2.072,258.0,22157,mRNA processing
+BCOR complex-mediated transcriptional repression,-2.082,259.0,21773,Regulation of transcription
+mRNA poly-A binding,-2.094,260.0,22946,
+Cohesin loading complex formation,-2.115,261.0,21705,mRNA processing
+PML body,-2.124,262.0,23220,Regulation of transcription
+Non-canonical Wnt signaling pathway,-2.153,263.0,22757,Signaling
+Histone and DNA methyltransferases,-2.171,264.0,22962,Regulation of transcription
+p300-CBP ID pathway association,-2.18,265.0,22970,Regulation of transcription
+NEST:218,-2.182,266.0,22042,Cell motility
+Fatty acid metabolism in the liver,-2.204,267.0,22079,Metabolism
+NEST:328,-2.23,268.0,21753,mRNA processing
+Complement activation alternative pathway I,-2.2319999999999998,269.0,22661,Metabolism
+NEST:168,-2.238,270.0,22817,Cell motility
+NEST:246,-2.305,271.0,22224,mRNA processing
+Components of apical/basal cell polarity establishment,-2.352,272.0,21498,Signaling
+Dystrophin-associated complex,-2.3609999999999998,273.0,21492,Cell motility
+Extended NCOR complex,-2.381,274.0,22691,Regulation of transcription
+CHEK2-spectrin complex,-2.4290000000000003,275.0,21626,Cell motility
+Extended shelterin complex,-2.529,276.0,23029,Protein modification
+NEST:314,-2.572,277.0,21652,Cell motility
+U12-type spliceosomal complex,-2.5839999999999996,278.0,23190,mRNA processing
+Non U2-type catalytic step 2 spliceosome,-2.594,279.0,23109,mRNA processing
+"Ubiquitin E3 ligase (FBXW7, CUL1, SKP1A, RBX1)",-2.608,280.0,21945,Cell cycle
+CBP and p300 binds NF-kB complex,-2.742,281.0,23097,Signaling
+KCNQ1 macromolecular complex,-2.7969999999999997,282.0,22066,Signaling
+Basement membrane glycoproteins,-2.82,283.0,23020,Cell motility
+GRB2 events in PIK3 signaling,-2.91,284.0,22059,Cell motility
+PIK3-EGFR signaling,-3.0,285.0,23113,Signaling
+Rho-dependent protein serine/threonine kinase activity,-3.0380000000000003,286.0,21409,Cell motility
+EGFR/Her4 signaling,-3.083,287.0,22362,Signaling
+Nuclear pore part II,-3.1860000000000004,288.0,21931,
+NEST:217,-3.195,289.0,cut0-15-Louv103,
+NEST:290,-3.326,290.0,21518,mRNA processing
+Desmosome subcomplex,-3.616,291.0,22270,
+Phosphatase 2A catalytic subunit,-3.699,292.0,23051,
+Nuclear periphery,-3.83,293.0,23267,
+SMAD-TGFbeta signaling,-3.85,294.0,23164,Protein modification
+MutL alpha/beta complex,-3.945,295.0,22064,Cell cycle
+Transcriptional regulation by TP53 via histone acetyltransferase,-4.015,296.0,22846,Cell cycle
+NEST:300,-4.104,297.0,21545,Regulation of transcription
+Androgen receptor signaling pathway,-4.2010000000000005,298.0,23252,Regulation of transcription
+NEST:262,-4.343999999999999,299.0,22344,Cell cycle
+PIK3-cyclin signaling,-4.66,300.0,21798,Cell motility
+MDM2-p53 pathway,-4.683,301.0,23035,Cell cycle
+NEST:362,-5.02,302.0,21968,
+GRB2/SHC1 events in EGFR signaling,-5.662000000000001,303.0,22560,Cell motility
+JNK signaling part I,-5.696000000000001,304.0,22067,Protein modification
+"DNA-directed RNA polymerase II, holoenzyme",-7.914,305.0,23241,Regulation of transcription
+Integrin binding,-7.915,306.0,22706,Cell motility
+PIK3-insulin receptor signaling,-8.947000000000001,307.0,21470,Signaling
+H2BUb1 ubiquitination,-9.202,308.0,22573,Regulation of transcription
+EGF/FGF stimulation of cell proliferation,-9.238,309.0,23199,Signaling
+WWP E3 ligase activity,-9.881,310.0,22548,Protein modification
+NEST:91,-10.333,311.0,23213,Regulation of transcription
+"Complement activation, classical pathway components",-10.41,312.0,22941,Metabolism
+EGFR/Her2/Her3 signaling,-15.097999999999999,313.0,21826,Signaling
+Oncogene induced senescence,-16.583,314.0,22995,Cell cycle
+Complement receptor 1/2,-17.237000000000002,315.0,21444,
+tRNA export from nucleus,-19.844,316.0,21770,
+Nuclear pore outer ring,-21.406999999999996,317.0,22958,
+H3 acetylation and H3K4 methylation crosstalk,-115.3,318.0,23141,Regulation of transcription
