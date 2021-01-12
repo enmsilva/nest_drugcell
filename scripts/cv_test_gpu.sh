@@ -11,7 +11,7 @@ modelfile="${homedir}/models/model_final.pt"
 resultdir="${homedir}/result"
 mkdir -p $resultdir
 
-hiddendir="${homedir}/hidden"
+hiddendir="${homedir}/hidden_${2}"
 if [ -d $hiddendir ]
 then
 	rm -rf $hiddendir

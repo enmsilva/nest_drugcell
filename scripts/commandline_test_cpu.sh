@@ -5,7 +5,7 @@ cell2idfile="${homedir}/data/cell2ind.txt"
 drug2idfile="${homedir}/data/drug2ind.txt"
 mutationfile="${homedir}/data/cell2mutation.txt"
 drugfile="${homedir}/data/drug2fingerprint.txt"
-testdatafile="${homedir}/data/drugcell_test.txt"
+testdatafile="${homedir}/data/drugcell_all.txt"
 
 modelfile="${homedir}/models/model_final.pt"
 resultdir="${homedir}/result"
