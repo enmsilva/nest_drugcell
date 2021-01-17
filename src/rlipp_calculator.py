@@ -1,7 +1,9 @@
-import pandas as pd
-import numpy as np
-from sklearn.linear_model import RidgeCV
 from scipy import stats
+from sklearn.linear_model import RidgeCV
+
+import numpy as np
+import pandas as pd
+
 
 class RLIPPCalculator():
     
@@ -22,12 +24,15 @@ class RLIPPCalculator():
         self.drug_count = args.drug_count
         if self.drug_count == 0:
             self.drug_count = len(drugs)
+            
+        self.num_hiddens_genotype = args.genotype_hiddens
         
         self.terms = self.ontology['S'].unique().tolist()
         
-        #self.create_gene_hidden_files()
+        self.create_gene_hidden_files()
 
 
+    # Create hidden files for all genes which are just their mutation values
     def create_gene_hidden_files(self):
         cell_id_map = dict(zip(self.cell_index['C'], self.cell_index['I']))
         cell_line_ids = np.array([cell_id_map[x] for x in self.test_df['C'].tolist()])
@@ -37,14 +42,16 @@ class RLIPPCalculator():
             np.savetxt(file_name, mat_data_sub, fmt='%.3f')
 
     
-    def get_drug_pos_map(self):
+    #Create a map of a list of the position of a drug in the test file 
+    def create_drug_pos_map(self):
         drug_pos_map = {d:[] for d in self.drugs}
         for i, row in self.test_df.iterrows():
             drug_pos_map[row['D']].append(i)
         return drug_pos_map
 
 
-    def sort_drugs_corr(self, drug_pos_map):
+    # Create a sorted map of spearman correlation values for every drug
+    def create_drug_corr_map_sorted(self, drug_pos_map):
         drug_corr_map = {}
         for d in self.drugs:
             test_vals = np.take(np.array(self.test_df['AUC']), drug_pos_map[d])
@@ -53,20 +60,23 @@ class RLIPPCalculator():
         return {drug:corr for drug,corr in sorted(drug_corr_map.items(), key=lambda item:item[1], reverse=True)}
 
     
+    #Load the hidden file for a given term
     def load_feature(self, term, size):
         file_name = self.hidden_dir + term + '.hidden'
         return np.loadtxt(file_name, usecols=range(size))
 
 
+    #Load hidden features for all the terms and genes
     def load_all_features(self):
         feature_map = {}
         for t in self.terms:
-            feature_map[t] = self.load_feature(t, 6)
+            feature_map[t] = self.load_feature(t, self.num_hiddens_genotype)
         for g in self.genes:
             feature_map[g] = self.load_feature(g, 1)
         return feature_map
 
 
+    #Get a hidden feature matrix of a given term's children 
     def get_child_features(self, feature_map, term, index_list):
         child_features = []
         children = [row['T'] for _,row in self.ontology.iterrows() if row['S']==term]
@@ -75,6 +85,8 @@ class RLIPPCalculator():
         return np.column_stack((f for f in child_features))
 
 
+    #Executes 5-fold cross validated Ridge regression for a given hidden features matrix
+    #and returns the spearman correlation value of the predicted output
     def exec_lm(self, X, y):
         regr = RidgeCV(fit_intercept=False, cv=5)
         regr.fit(X, y)
@@ -82,13 +94,15 @@ class RLIPPCalculator():
         return stats.spearmanr(y_pred, y)[0]
 
 
+    #Calculates RLIPP scores for top n drugs (n = drug_count), and
+    #prints the result in "Drug Term P_rho C_rho RLIPP" format
     def calc_scores(self):
         print('Starting score calculation')
         outf = open(self.out_file, "w")
         outf.write('Drug\tTerm\tP_rho\tC_rho\tRLIPP\n')
         
-        drug_pos_map = self.get_drug_pos_map()
-        sorted_drugs = self.sort_drugs_corr(drug_pos_map).keys()
+        drug_pos_map = self.create_drug_pos_map()
+        sorted_drugs = self.create_drug_corr_map_sorted(drug_pos_map).keys()
         
         feature_map = self.load_all_features()
         print('feature map created')
