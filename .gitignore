@@ -10,3 +10,4 @@ src/__pycache__/
 src/.ipynb_checkpoints/
 rlipp/
 src/copied_notebooks/
+temp/
