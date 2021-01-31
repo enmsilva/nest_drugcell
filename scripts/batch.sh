@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=NeST_DrugCell
 #SBATCH --output=out.log
-#SBATCH --partition=gpu
-#SBATCH --nodelist=nrnb-6-1
+#SBATCH --partition=nrnb-gpu
+#SBATCH --nodelist=nrnb-gpu-03
 #SBATCH --gres=gpu:1
+#SBATCH --mem=64G
 #SBATCH --dependency=singleton
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
