@@ -48,6 +48,8 @@ def main():
     parser.add_argument('-output', help = 'Output file', type = str)
     
     cmd_args = parser.parse_args()
+    
+    exec_elastic_net(cmd_args)
 
 
 if __name__ == "__main__":
