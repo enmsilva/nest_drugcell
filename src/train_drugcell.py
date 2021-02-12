@@ -150,7 +150,7 @@ def main():
 
 	torch.set_printoptions(precision = 5)
 
-	parser = argparse.ArgumentParser(description = 'Train dcell')
+	parser = argparse.ArgumentParser(description = 'Train DrugCell')
 	parser.add_argument('-onto', help = 'Ontology file used to guide the neural network', type = str)
 	parser.add_argument('-train', help = 'Training dataset', type = str)
 	parser.add_argument('-epoch', help = 'Training epochs for training', type = int, default = 300)

@@ -5,7 +5,8 @@ from sklearn.linear_model import ElasticNetCV
 
 def exec_elastic_net(args):
     
-    data = pd.read_csv(args.test, sep='\t', header=None, names=(['cell', 'drug', 'auc']))
+    train_df = pd.read_csv(args.train, sep='\t', header=None, names=(['cell', 'drug', 'auc']))
+    test_df = pd.read_csv(args.test, sep='\t', header=None, names=(['cell', 'drug', 'auc']))
 
     gene_index = pd.read_csv(args.gene_index, sep='\t', header=None, names=(['I', 'G']))
     gene_list = gene_index['G']
@@ -20,18 +21,25 @@ def exec_elastic_net(args):
     
     drug_features = pd.read_csv(args.drug_fingerprint, header=None)
     
-    train_Y = np.array(data['auc'])
-    train_X = np.empty(shape = (len(data), len(gene_list) + len(drug_features.columns)))
+    train_Y = np.array(train_df['auc'])
+    train_X = np.empty(shape = (len(train_df), len(gene_list) + len(drug_features.columns)))
+    test_X = np.empty(shape = (len(test_df), len(gene_list) + len(drug_features.columns)))
     
-    for i, row in data.iterrows():
+    for i, row in train_df.iterrows():
         temp = []
         temp = np.append(temp, np.array(cell_features.iloc[int(cell_map[row['cell']])]))
         temp = np.append(temp, np.array(drug_features.iloc[int(drug_map[row['drug']])]))
         train_X[i] = temp
+
+    for i, row in test_df.iterrows():
+        temp = []
+        temp = np.append(temp, np.array(cell_features.iloc[int(cell_map[row['cell']])]))
+        temp = np.append(temp, np.array(drug_features.iloc[int(drug_map[row['drug']])]))
+        test_X[i] = temp
     
     regr = ElasticNetCV(fit_intercept=True, cv=5, max_iter=3000, tol=1e-3, n_jobs=-2)
     regr.fit(train_X, train_Y)
-    predicted_Y = regr.predict(train_X)
+    predicted_Y = regr.predict(test_X)
     
     np.savetxt(args.output, predicted_Y, fmt = '%.4e')
 
@@ -39,6 +47,7 @@ def exec_elastic_net(args):
 def main():
     
     parser = argparse.ArgumentParser(description = 'Execute Elastic net')
+    parser.add_argument('-train', help = 'Train file', type = str)
     parser.add_argument('-test', help = 'Test file', type = str)
     parser.add_argument('-drug_index', help = 'Drug-index file', type = str)
     parser.add_argument('-gene_index', help = 'Gene-index file', type = str)
