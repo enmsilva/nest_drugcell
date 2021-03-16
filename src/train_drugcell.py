@@ -64,10 +64,7 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 			total_loss = 0
 			for name, output in aux_out_map.items():
 				loss = nn.MSELoss()
-				if name == 'final':
-					total_loss += loss(output, cuda_labels)
-				else:  # change 0.2 to smaller one for big terms
-					total_loss += 0.2 * loss(output, cuda_labels)
+				total_loss += loss(output, cuda_labels)
 
 			total_loss.backward()
 
@@ -102,14 +99,14 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 			else:
 				val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim = 0)
 
-		test_corr = util.pearson_corr(val_predict, val_label_gpu)
+		val_corr = util.pearson_corr(val_predict, val_label_gpu)
 
 		epoch_end_time = time.time()
-		print("fold\t%d\tepoch\t%d\ttrain_corr\t%.6f\tval_corr\t%.6f\ttotal_loss\t%.6f\telapsed_time\t%s" % (fold, epoch, train_corr, test_corr, total_loss, epoch_end_time - epoch_start_time))
+		print("fold\t%d\tepoch\t%d\ttrain_corr\t%.6f\tval_corr\t%.6f\ttotal_loss\t%.6f\telapsed_time\t%s" % (fold, epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 		epoch_start_time = epoch_end_time
 
-		if test_corr >= max_corr:
-			max_corr = test_corr
+		if val_corr >= max_corr:
+			max_corr = val_corr
 			
 	return max_corr
 
