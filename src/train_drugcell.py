@@ -102,7 +102,7 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 		val_corr = util.pearson_corr(val_predict, val_label_gpu)
 
 		epoch_end_time = time.time()
-		print("fold\t%d\tepoch\t%d\ttrain_corr\t%.6f\tval_corr\t%.6f\ttotal_loss\t%.6f\telapsed_time\t%s" % (fold, epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
+		print("fold %d\tepoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (fold, epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 		epoch_start_time = epoch_end_time
 
 		if val_corr >= max_corr:
@@ -131,12 +131,13 @@ def cross_validate(data_wrapper):
 		max_corr_fold = train_model(data_wrapper, model, train_feature_fold, train_label_fold, val_feature_fold, val_label_fold, fold)
 		if max_corr_fold >= max_corr:
 			torch.save(model, data_wrapper.modeldir + '/model_final.pt')
+			max_corr = max_corr_fold
 
 
 def exec_training(data_wrapper):
 
 	train_features, train_labels = data_wrapper.train_data
-	train_feat, val_feat, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.01, shuffle = False)
+	train_feat, val_feat, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
 
 	# Create the neural network
 	model = drugcell_nn(data_wrapper)
