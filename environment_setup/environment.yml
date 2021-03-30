@@ -32,6 +32,7 @@ dependencies:
   - numpy-base=1.17.2=py37hde5b4d6_0
   - olefile=0.46=py37_0
   - openssl=1.1.1d=h7b6447c_2
+  - optuna=2.6.0
   - pillow=6.2.0=py37h34e0f95_0
   - pip=19.2.3=py37_0
   - pycparser=2.19=py37_0
@@ -53,4 +54,3 @@ dependencies:
     - scipy==1.4.1
     - scikit-learn==0.23.0
 prefix: /cellar/users/asinghal/anaconda3/envs/pytorch3drugcell
-
