@@ -196,8 +196,10 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 				val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim = 0)
 
 		val_corr = util.pearson_corr(val_predict, val_label_gpu)
-		if val_corr is None:
-			val_corr = 0
+		try:
+			float(val_corr)
+		except ValueError:
+			val_corr = 0.0
 
 		epoch_end_time = time.time()
 		print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
@@ -205,6 +207,7 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 
 		if val_corr >= max_corr:
 			max_corr = val_corr
+			max_corr_count = 0
 		else:
 			max_corr_count += 1
 
@@ -214,7 +217,7 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 		if trial.should_prune():
 			raise optuna.exceptions.TrialPruned()
 
-		if max_corr_count >= 10:
+		if max_corr_count >= 20:
 			break
 
 	return max_corr
@@ -223,7 +226,7 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 def exec_trial_training(trial, opt):
 
 	opt.genotype_hiddens = trial.suggest_int("neurons_per_node", 1, 12)
-	opt.lr = trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True)
+	opt.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
 	data_wrapper = TrainingDataWrapper(opt)
 
 	# Create the neural network
