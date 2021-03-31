@@ -114,8 +114,8 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 def train_model(trial, data_wrapper, model, train_feature, train_label, val_feature, val_label):
 
 	epoch_start_time = time.time()
-	best_model = 0
 	max_corr = 0
+	max_corr_count = 0
 
 	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim, CUDA_ID)
 	for name, param in model.named_parameters():
@@ -134,6 +134,8 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 	optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "RMSprop", "SGD"])
 	optimizer = getattr(optim, optimizer_name)(model.parameters(), lr=data_wrapper.learning_rate)
 	optimizer.zero_grad()
+
+	print("Learning rate = %d\tNeurons = %d\tOptimizer = %s" %(data_wrapper.learning_rate, data_wrapper.num_hiddens_genotype, optimizer_name))
 
 	for epoch in range(data_wrapper.epochs):
 
@@ -194,6 +196,8 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 				val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim = 0)
 
 		val_corr = util.pearson_corr(val_predict, val_label_gpu)
+		if val_corr is None:
+			val_corr = 0
 
 		epoch_end_time = time.time()
 		print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
@@ -201,6 +205,8 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 
 		if val_corr >= max_corr:
 			max_corr = val_corr
+		else:
+			max_corr_count += 1
 
 		trial.report(val_corr, epoch)
 
@@ -208,12 +214,15 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 		if trial.should_prune():
 			raise optuna.exceptions.TrialPruned()
 
-	return val_corr
+		if max_corr_count >= 10:
+			break
+
+	return max_corr
 
 
 def exec_trial_training(trial, opt):
 
-	opt.genotype_hiddens = trial.suggest_int("num_hiddens_genotype", 1, 12)
+	opt.genotype_hiddens = trial.suggest_int("neurons_per_node", 1, 12)
 	opt.lr = trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True)
 	data_wrapper = TrainingDataWrapper(opt)
 

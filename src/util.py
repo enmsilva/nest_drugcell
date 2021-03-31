@@ -47,23 +47,8 @@ def load_mapping(mapping_file):
 		mapping[line[1]] = int(line[0])
 
 	file_handle.close()
-	
+
 	return mapping
-
-
-# def prepare_train_data(train_file, test_file, cell2id_mapping_file, drug2id_mapping_file):
-# 
-# 	# load mapping files
-# 	cell2id_mapping = load_mapping(cell2id_mapping_file)
-# 	drug2id_mapping = load_mapping(drug2id_mapping_file)
-# 
-# 	train_feature, train_label = load_train_data(train_file, cell2id_mapping, drug2id_mapping)
-# 	test_feature, test_label = load_train_data(test_file, cell2id_mapping, drug2id_mapping)
-# 
-# 	print('Total number of cell lines = %d' % len(cell2id_mapping))
-# 	print('Total number of drugs = %d' % len(drug2id_mapping))
-# 
-# 	return (torch.Tensor(train_feature), torch.FloatTensor(train_label), torch.Tensor(test_feature), torch.FloatTensor(test_label)), cell2id_mapping, drug2id_mapping
 
 
 def prepare_train_data(train_file, cell2id_mapping, drug2id_mapping):
