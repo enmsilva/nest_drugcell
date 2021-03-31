@@ -115,7 +115,6 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 
 	epoch_start_time = time.time()
 	max_corr = 0
-	max_corr_count = 0
 
 	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim, CUDA_ID)
 	for name, param in model.named_parameters():
@@ -207,18 +206,12 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 
 		if val_corr >= max_corr:
 			max_corr = val_corr
-			max_corr_count = 0
-		else:
-			max_corr_count += 1
 
 		trial.report(val_corr, epoch)
 
 		# Handle pruning based on the intermediate value.
 		if trial.should_prune():
 			raise optuna.exceptions.TrialPruned()
-
-		if max_corr_count >= 20:
-			break
 
 	return max_corr
 
