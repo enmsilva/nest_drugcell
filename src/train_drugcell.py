@@ -204,9 +204,9 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 
 		trial.report(val_corr, epoch)
 
-        # Handle pruning based on the intermediate value.
-        if trial.should_prune():
-            raise optuna.exceptions.TrialPruned()
+		# Handle pruning based on the intermediate value.
+		if trial.should_prune():
+			raise optuna.exceptions.TrialPruned()
 
 	return val_corr
 
