@@ -211,7 +211,7 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 	return val_corr
 
 
-def exec_training(trial, opt):
+def exec_trial_training(trial, opt):
 
 	opt.genotype_hiddens = trial.suggest_int("num_hiddens_genotype", 1, 12)
 	opt.lr = trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True)
@@ -274,7 +274,7 @@ def main():
 
 		study = optuna.create_study(direction="maximize")
 
-		study.optimize(lambda trial: exec_training(trial, opt), n_trials=200)
+		study.optimize(lambda trial: exec_trial_training(trial, opt), n_trials=200)
 
 		pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
 		complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
