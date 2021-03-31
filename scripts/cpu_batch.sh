@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=RLIPP_NeST_DrugCell
+#SBATCH --job-name=NeST_DrugCell_CPU
 #SBATCH --output=cpu_out.log
 #SBATCH --partition=nrnb-compute
-#SBATCH --nodelist=nrnb-cn-12
+#SBATCH --nodelist=nrnb-cn-08
 #SBATCH --mem=64G
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-bash "${homedir}/scripts/rlipp_exec.sh" $homedir
+bash "${homedir}/scripts/elastic_net.sh" $homedir $1
 
