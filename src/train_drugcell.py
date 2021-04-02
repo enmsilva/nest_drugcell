@@ -130,11 +130,10 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 	val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size = data_wrapper.batchsize, shuffle = False)
 
 	# Generate the optimizers.
-	optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "RMSprop", "SGD"])
-	optimizer = getattr(optim, optimizer_name)(model.parameters(), lr=data_wrapper.learning_rate)
+	optimizer = torch.optim.Adam(model.parameters(), lr = data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
 	optimizer.zero_grad()
 
-	print("Learning rate = %d\tNeurons = %d\tOptimizer = %s" %(data_wrapper.learning_rate, data_wrapper.num_hiddens_genotype, optimizer_name))
+	print("Learning rate = %f\tNeurons = %d" %(data_wrapper.learning_rate, data_wrapper.num_hiddens_genotype))
 
 	for epoch in range(data_wrapper.epochs):
 
@@ -197,7 +196,10 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 		val_corr = util.pearson_corr(val_predict, val_label_gpu)
 		try:
 			float(val_corr)
-		except ValueError:
+		except (ValueError, TypeError) as e:
+			print(e)
+			val_corr = 0.0
+		if val_corr is None:
 			val_corr = 0.0
 
 		epoch_end_time = time.time()
@@ -279,7 +281,7 @@ def main():
 
 		study = optuna.create_study(direction="maximize")
 
-		study.optimize(lambda trial: exec_trial_training(trial, opt), n_trials=200)
+		study.optimize(lambda trial: exec_trial_training(trial, opt), n_trials=50)
 
 		pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
 		complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
