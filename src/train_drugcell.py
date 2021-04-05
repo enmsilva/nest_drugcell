@@ -114,6 +114,7 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 def train_model(trial, data_wrapper, model, train_feature, train_label, val_feature, val_label):
 
 	epoch_start_time = time.time()
+	max_corr = 0.0
 
 	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim, CUDA_ID)
 	for name, param in model.named_parameters():
@@ -205,9 +206,14 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 
 		trial.report(val_corr, epoch)
 
+		if val_corr >= max_corr:
+			max_corr = val_corr
+
 		# Handle pruning based on the intermediate value.
 		#if trial.should_prune():
 		#	raise optuna.exceptions.TrialPruned()
+
+	return max_corr
 
 
 def exec_trial_training(trial, opt):
@@ -225,8 +231,10 @@ def exec_trial_training(trial, opt):
 	train_features, train_labels = data_wrapper.train_data
 	train_feat, val_feat, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
 
-	train_model(trial, data_wrapper, model, train_feat, train_label, val_feat, val_label)
+	max_val_corr = train_model(trial, data_wrapper, model, train_feat, train_label, val_feat, val_label)
 	torch.save(model, data_wrapper.modeldir + '/model_final.pt')
+
+	return max_val_corr
 
 
 def exec_training(opt):
