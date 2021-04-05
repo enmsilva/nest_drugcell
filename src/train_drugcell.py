@@ -114,7 +114,6 @@ def train_model(data_wrapper, model, train_feature, train_label, val_feature, va
 def train_model(trial, data_wrapper, model, train_feature, train_label, val_feature, val_label):
 
 	epoch_start_time = time.time()
-	max_corr = 0
 
 	term_mask_map = util.create_term_mask(model.term_direct_gene_map, model.gene_dim, CUDA_ID)
 	for name, param in model.named_parameters():
@@ -132,8 +131,6 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 	# Generate the optimizers.
 	optimizer = torch.optim.Adam(model.parameters(), lr = data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
 	optimizer.zero_grad()
-
-	print("Learning rate = %f\tNeurons = %d" %(data_wrapper.learning_rate, data_wrapper.num_hiddens_genotype))
 
 	for epoch in range(data_wrapper.epochs):
 
@@ -206,16 +203,11 @@ def train_model(trial, data_wrapper, model, train_feature, train_label, val_feat
 		print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 		epoch_start_time = epoch_end_time
 
-		if val_corr >= max_corr:
-			max_corr = val_corr
-
 		trial.report(val_corr, epoch)
 
 		# Handle pruning based on the intermediate value.
-		if trial.should_prune():
-			raise optuna.exceptions.TrialPruned()
-
-	return max_corr
+		#if trial.should_prune():
+		#	raise optuna.exceptions.TrialPruned()
 
 
 def exec_trial_training(trial, opt):
@@ -223,6 +215,8 @@ def exec_trial_training(trial, opt):
 	opt.genotype_hiddens = trial.suggest_int("neurons_per_node", 1, 12)
 	opt.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
 	data_wrapper = TrainingDataWrapper(opt)
+
+	print("Learning rate = %f\tNeurons = %d" %(data_wrapper.learning_rate, data_wrapper.num_hiddens_genotype))
 
 	# Create the neural network
 	model = drugcell_nn(data_wrapper)
@@ -278,10 +272,9 @@ def main():
 	if opt.optimize == 0:
 		exec_training(opt)
 	else:
-
+		optuna.logging.set_verbosity(optuna.logging.DEBUG)
 		study = optuna.create_study(direction="maximize")
-
-		study.optimize(lambda trial: exec_trial_training(trial, opt), n_trials=50)
+		study.optimize(lambda trial: exec_trial_training(trial, opt), n_trials=30)
 
 		pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
 		complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
