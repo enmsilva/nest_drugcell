@@ -11,7 +11,7 @@ from util import *
 import training_data_wrapper
 
 
-class drugcell_nn(nn.Module):
+class DrugCellNN(nn.Module):
 
 	def __init__(self, data_wrapper):
 

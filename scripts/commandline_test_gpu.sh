@@ -26,6 +26,6 @@ source activate pytorch3drugcell
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultdir \
-	-predict $testdatafile -load $modelfile -cuda $cudaid > test.log
+	-batchsize 10000 -predict $testdatafile -load $modelfile -cuda $cudaid > test.log
 
 mv ${resultdir}/drugcell.predict ${resultdir}/drugcell_all.predict

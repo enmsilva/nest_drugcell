@@ -11,7 +11,7 @@ traindatafile="${homedir}/data/drugcell_all.txt"
 modeldir="${homedir}/models"
 if [ -d $modeldir ]
 then
-        rm -rf $modeldir
+	rm -rf $modeldir
 fi
 mkdir -p $modeldir
 
