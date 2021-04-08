@@ -1,8 +1,8 @@
 import optuna
 from optuna.trial import TrialState
 
-import nn_trainer
-import training_data_wrapper
+from nn_trainer import *
+from training_data_wrapper import *
 
 
 class OptunaNNTrainer(NNTrainer):
