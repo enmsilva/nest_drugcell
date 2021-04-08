@@ -16,7 +16,7 @@ class NNTrainer():
 
 		self.data_wrapper = TrainingDataWrapper(opt)
 
-		self.model = DrugCellNN(data_wrapper)
+		self.model = DrugCellNN(self.data_wrapper)
 		self.model.cuda(self.data_wrapper.cuda)
 
 

@@ -11,7 +11,7 @@ dependencies:
   - ca-certificates=2019.8.28=0
   - certifi=2019.9.11=py37_0
   - cffi=1.12.3=py37h2e261b9_0
-  - cudatoolkit=10.0.130=0
+  - cudatoolkit=11.1
   - freetype=2.9.1=h8a8886c_1
   - intel-openmp=2019.4=243
   - jpeg=9b=h024ee3a_2

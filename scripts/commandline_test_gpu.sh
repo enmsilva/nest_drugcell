@@ -22,7 +22,8 @@ cudaid=0
 
 pyScript="${homedir}/src/predict_drugcell.py"
 
-source activate pytorch3drugcell
+#source activate pytorch3drugcell
+source activate test
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultdir \
