@@ -1,6 +1,15 @@
+import time
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.utils.data as du
+from torch.autograd import Variable
+from sklearn.model_selection import train_test_split
+
 import optuna
 from optuna.trial import TrialState
 
+import util
 from nn_trainer import *
 from training_data_wrapper import *
 
@@ -49,7 +58,7 @@ class OptunaNNTrainer(NNTrainer):
 		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size = self.data_wrapper.batchsize, shuffle = False)
 		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size = self.data_wrapper.batchsize, shuffle = False)
 
-		optimizer = torch.optim.Adam(model.parameters(), lr = self.data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
+		optimizer = torch.optim.Adam(self.model.parameters(), lr = self.data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
 		optimizer.zero_grad()
 
 		for epoch in range(self.data_wrapper.epochs):
