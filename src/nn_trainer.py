@@ -2,7 +2,7 @@ import time
 import torch
 import torch.optim as optim
 import torch.utils.data as du
-import torch.autograd.Variable as Variable
+from torch.autograd import Variable
 from sklearn.model_selection import train_test_split
 
 import util
