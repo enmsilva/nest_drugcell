@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 
 import util
 from training_data_wrapper import *
+import drugcell_nn
 from drugcell_nn import *
 
 
