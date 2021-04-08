@@ -11,7 +11,7 @@ class DrugCellNN(nn.Module):
 
 	def __init__(self, data_wrapper):
 
-		super(drugcell_nn, self).__init__()
+		super().__init__()
 
 		self.root = data_wrapper.root
 		self.num_hiddens_genotype = data_wrapper.num_hiddens_genotype

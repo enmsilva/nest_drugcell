@@ -72,8 +72,8 @@ parser.add_argument('-fingerprint', help='Morgan fingerprint representation for 
 opt = parser.parse_args()
 torch.set_printoptions(precision=5)
 
-predict_data, cell2id_mapping, drug2id_mapping = prepare_predict_data(opt.predict, opt.cell2id, opt.drug2id)
-gene2id_mapping = load_mapping(opt.gene2id)
+predict_data, cell2id_mapping, drug2id_mapping = util.prepare_predict_data(opt.predict, opt.cell2id, opt.drug2id)
+gene2id_mapping = util.load_mapping(opt.gene2id)
 
 # load cell/drug features
 cell_features = np.genfromtxt(opt.genotype, delimiter=',')
