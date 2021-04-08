@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-import training_data_wrapper
+from training_data_wrapper import *
 
 
 class DrugCellNN(nn.Module):
