@@ -19,8 +19,7 @@ cudaid=0
 
 pyScript="${homedir}/src/train_drugcell.py"
 
-#source activate pytorch3drugcell
-source activate test
+source activate cuda11_env
 
 python -u $pyScript -onto $ontfile -gene2id $gene2idfile -drug2id $drug2idfile \
 	-cell2id $cell2idfile -train $traindatafile -genotype $mutationfile -fingerprint $drugfile \

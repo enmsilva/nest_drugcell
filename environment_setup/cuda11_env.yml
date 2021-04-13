@@ -1,4 +1,4 @@
-name: test
+name: cuda11_env
 channels:
   - pytorch
   - r
@@ -13,4 +13,4 @@ dependencies:
   - pytorch=1.8.0=py3.7_cuda11.1_cudnn8.0.5_0
   - scikit-learn
   - networkx
-prefix: /cellar/users/asinghal/anaconda3/envs/test
+prefix: /cellar/users/asinghal/anaconda3/envs/cuda11_env
