@@ -60,8 +60,7 @@ class NNTrainer():
 				# Forward + Backward + Optimize
 				optimizer.zero_grad()  # zero the gradient buffer
 
-				# Here term_NN_out_map is a dictionary
-				aux_out_map, _ = self.model(cuda_features)
+				aux_out_map,_ = self.model(cuda_features)
 
 				if train_predict.size()[0] == 0:
 					train_predict = aux_out_map['final'].data
@@ -75,12 +74,22 @@ class NNTrainer():
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():
+					print(name)
+					print(param)
 					if '_direct_gene_layer.weight' not in name:
 						continue
 					term_name = name.split('_')[0]
+					print(param.grad.data)
 					param.grad.data = torch.mul(param.grad.data, term_mask_map[term_name])
 
+				for name, param in self.model.named_parameters():
+					if '_direct_gene_layer.weight' not in name:
+						continue
+					print(param.grad.data)
+
 				optimizer.step()
+
+			calc_feature_importance(term_hidden_map)
 
 			train_corr = util.pearson_corr(train_predict, train_label_gpu)
 
@@ -111,3 +120,10 @@ class NNTrainer():
 		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 		return max_corr
+
+
+	def calc_feature_importance(self, term_hidden_map):
+
+		for term, hidden_map in term_hidden_map.items():
+			if term not in self.data_wrapper.gene_id_mapping:
+				continue
