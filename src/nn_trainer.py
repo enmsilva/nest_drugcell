@@ -153,5 +153,5 @@ class NNTrainer():
 
 		viann_score_map = {}
 		for i, gene in enumerate(self.data_wrapper.gene_id_mapping.keys()):
-			viann_score_map[gene] = viann_scores[i]
+			viann_score_map[gene] = viann_scores[i].item()
 		return viann_score_map
