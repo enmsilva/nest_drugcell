@@ -181,3 +181,16 @@ class DrugCellNN(nn.Module):
 		aux_out_map['final'] = self._modules['final_linear_layer_output'](aux_layer_out)
 
 		return aux_out_map, term_NN_out_map
+
+
+	# get weights from the model based on wight weight_type
+	# for example: weight_type = '_direct_gene_layer.weight'
+	def get_model_weights(self, term_mask_map, weight_type):
+		term_weights_map = {}
+		for name, param in self.named_parameters():
+			if weight_type not in name:
+				continue
+			term = name.split('_')[0]
+			term_weights = torch.mm(param.grad.data, torch.transpose(term_mask_map[term], 0, 1))
+			term_weights = torch.diagnal(term_weights)
+			term_weights_map[term] = term_weights

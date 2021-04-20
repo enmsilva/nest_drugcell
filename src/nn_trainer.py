@@ -46,6 +46,8 @@ class NNTrainer():
 		optimizer = torch.optim.Adam(self.model.parameters(), lr = self.data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
 		optimizer.zero_grad()
 
+		self.term_feature_variance_map = {}
+
 		for epoch in range(self.data_wrapper.epochs):
 			# Train
 			self.model.train()
@@ -74,22 +76,14 @@ class NNTrainer():
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():
-					print(name)
-					print(param)
 					if '_direct_gene_layer.weight' not in name:
 						continue
 					term_name = name.split('_')[0]
-					print(param.grad.data)
 					param.grad.data = torch.mul(param.grad.data, term_mask_map[term_name])
-
-				for name, param in self.model.named_parameters():
-					if '_direct_gene_layer.weight' not in name:
-						continue
-					print(param.grad.data)
 
 				optimizer.step()
 
-			calc_feature_importance(term_hidden_map)
+				self.update_variance(term_mask_map)
 
 			train_corr = util.pearson_corr(train_predict, train_label_gpu)
 
@@ -117,13 +111,47 @@ class NNTrainer():
 			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
 
+		self.finalize_variance()
+		viann_score_map = self.calc_feature_importance(term_mask_map)
+		viann_score_map = {g:sc for g,sc in sorted(viann_score_map.items(), key=lambda item:item[1], reverse=True)}
+		print(viann_score_map)
+
 		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 		return max_corr
 
 
-	def calc_feature_importance(self, term_hidden_map):
+	def update_variance(self, term_mask_map):
+		model_weights_map = self.model.get_model_weights(term_mask_map, '_direct_gene_layer.weight')
+		for term, term_weights in model_weights_map.items():
+			feature_welford_set_list = [(0, 0.0, 0.0)] * len(term_weights)
+			for i, weight in enumerate(term_weights):
+				if term in self.term_feature_variance_map:
+					feature_welford_set_list = self.term_feature_variance_map[term]
+				feature_welford_set_list[i] = util.update_variance(feature_welford_set_list[i], weight)
+			self.term_feature_variance_map[term] = feature_welford_set_list
 
-		for term, hidden_map in term_hidden_map.items():
-			if term not in self.data_wrapper.gene_id_mapping:
-				continue
+
+	def finalize_variance(self):
+		for term, feature_welford_set_list in self.term_feature_variance_map.items():
+			feature_variance_list = [0.0] * len(feature_welford_set_list)
+			for i, elem in enumerate(feature_welford_set_list):
+				(n, mean, M2) = elem
+				feature_variance_list[i] = M2/n
+			self.term_feature_variance_map[term] = feature_variance_list
+
+
+	def calc_feature_importance(self, term_mask_map):
+
+		viann_scores = [0.0] * self.model.gene_dim
+		final_weights_map = self.model.get_model_weights(term_mask_map, '_direct_gene_layer.weight')
+		for term, final_term_weights in final_weights_map.items():
+			feature_variance_list = self.term_feature_variance_map[term]
+			weighted_variance_list = torch.mul(final_term_weights, feature_variance_list)
+			for i, gene_id in enumerate(self.model.term_direct_gene_map[term]):
+				viann_scores[gene_id] += weighted_variance_list[i]
+
+		viann_score_map = {}
+		for i, gene in enumerate(self.data_wrapper.gene_id_mapping.keys()):
+			viann_score_map[gene] = viann_scores[i]
+		return viann_score_map

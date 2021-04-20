@@ -81,6 +81,17 @@ def create_term_mask(term_direct_gene_map, gene_dim, cuda_id):
 		mask = torch.zeros(len(gene_set), gene_dim)
 		for i, gene_id in enumerate(gene_set):
 			mask[i, gene_id] = 1
-		mask_gpu = torch.autograd.Variable(mask.cuda(cuda_id))
+		mask_gpu = mask.cuda(cuda_id)
 		term_mask_map[term] = mask_gpu
 	return term_mask_map
+
+
+# Update variance for every weight using Welford's online algorithm
+def update_variance(welford_set, new_weight):
+	(n, mean, M2) = welford_set
+	n += 1
+	delta = new_weight - mean
+	mean += delta/n
+	delta2 = new_weight - mean
+	M2 += delta * delta2
+	return (n, mean, M2)
