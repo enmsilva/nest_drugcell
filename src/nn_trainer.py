@@ -114,7 +114,7 @@ class NNTrainer():
 		self.finalize_variance()
 		viann_score_map = self.calc_feature_importance(term_mask_map)
 		viann_score_map = {g:sc for g,sc in sorted(viann_score_map.items(), key=lambda item:item[1], reverse=True)}
-		print(viann_score_map.keys())
+		print(viann_score_map)
 
 		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
