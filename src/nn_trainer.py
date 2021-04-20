@@ -34,9 +34,7 @@ class NNTrainer():
 		for name, param in self.model.named_parameters():
 			term_name = name.split('_')[0]
 			if '_direct_gene_layer.weight' in name:
-				param.data = torch.mul(param.data, term_mask_map[term_name]) * 0.1
-			else:
-				param.data = param.data * 0.1
+				param.data = torch.mul(param.data, term_mask_map[term_name])
 
 		train_label_gpu = Variable(train_label.cuda(self.data_wrapper.cuda))
 		val_label_gpu = Variable(val_label.cuda(self.data_wrapper.cuda))
@@ -153,5 +151,5 @@ class NNTrainer():
 
 		viann_score_map = {}
 		for i, gene in enumerate(self.data_wrapper.gene_id_mapping.keys()):
-			viann_score_map[gene] = viann_scores[i]
+			viann_score_map[gene] = viann_scores[i].item()
 		return viann_score_map
