@@ -192,5 +192,6 @@ class DrugCellNN(nn.Module):
 				continue
 			term = name.split('_')[0]
 			term_weights = torch.mm(param.grad.data, torch.transpose(term_mask_map[term], 0, 1))
-			term_weights = torch.diagnal(term_weights)
+			term_weights = torch.diagonal(term_weights)
 			term_weights_map[term] = term_weights
+		return term_weights_map
