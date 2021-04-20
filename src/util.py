@@ -78,11 +78,10 @@ def build_input_vector(input_data, cell_features, drug_features):
 def create_term_mask(term_direct_gene_map, gene_dim, cuda_id):
 	term_mask_map = {}
 	for term, gene_set in term_direct_gene_map.items():
-		mask = torch.zeros(len(gene_set), gene_dim)
+		mask = torch.zeros(len(gene_set), gene_dim).cuda(cuda_id)
 		for i, gene_id in enumerate(gene_set):
 			mask[i, gene_id] = 1
-		mask_gpu = mask.cuda(cuda_id)
-		term_mask_map[term] = mask_gpu
+		term_mask_map[term] = mask
 	return term_mask_map
 
 
