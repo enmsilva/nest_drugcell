@@ -134,7 +134,7 @@ class NNTrainer():
 
 	def finalize_variance(self):
 		for term, feature_welford_set_list in self.term_feature_variance_map.items():
-			feature_variance_list = [0.0] * len(feature_welford_set_list)
+			feature_variance_list = torch.zeros(len(feature_welford_set_list))
 			for i, elem in enumerate(feature_welford_set_list):
 				(n, mean, M2) = elem
 				feature_variance_list[i] = M2/n
@@ -143,7 +143,7 @@ class NNTrainer():
 
 	def calc_feature_importance(self, term_mask_map):
 
-		viann_scores = [0.0] * self.model.gene_dim
+		viann_scores = torch.zeros(self.model.gene_dim)
 		final_weights_map = self.model.get_model_weights(term_mask_map, '_direct_gene_layer.weight')
 		for term, final_term_weights in final_weights_map.items():
 			feature_variance_list = self.term_feature_variance_map[term]
