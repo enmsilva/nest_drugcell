@@ -89,8 +89,8 @@ def create_term_mask(term_direct_gene_map, gene_dim, cuda_id):
 def update_variance(welford_set, new_weight):
 	(n, mean, M2) = welford_set
 	n += 1
-	delta = new_weight - mean
+	delta = abs(new_weight - mean)
 	mean += delta/n
-	delta2 = new_weight - mean
+	delta2 = abs(new_weight - mean)
 	M2 += delta * delta2
 	return (n, mean, M2)
