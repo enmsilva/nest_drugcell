@@ -6,7 +6,7 @@ import pandas as pd
 
 
 class RLIPPCalculator():
-    
+
     def __init__(self, args):
         self.ontology = pd.read_csv(args.ontology, sep='\t', header=None, names=['S', 'T', 'I'])
         self.test_df = pd.read_csv(args.test, sep='\t', header=None, names=['C', 'D', 'AUC'])
@@ -16,19 +16,19 @@ class RLIPPCalculator():
         self.cell_index = pd.read_csv(args.cell_index, sep="\t", header=None, names=['I', 'C'])
         self.cell_mutation = np.loadtxt(args.cell_mutation, delimiter=',')
         self.out_file = args.output
-        
+
         self.hidden_dir = args.hidden
         if not self.hidden_dir.endswith('/'):
             self.hidden_dir += '/'
-        
+
         self.drug_count = args.drug_count
         if self.drug_count == 0:
             self.drug_count = len(drugs)
-            
+
         self.num_hiddens_genotype = args.genotype_hiddens
-        
-        self.terms = self.ontology['S'].unique().tolist()
-        
+
+        self.terms = [str(t) for t in self.ontology['S'].unique().tolist()]
+
         self.create_gene_hidden_files()
 
 
@@ -41,8 +41,8 @@ class RLIPPCalculator():
             mat_data_sub = self.cell_mutation[cell_line_ids, i].ravel()
             np.savetxt(file_name, mat_data_sub, fmt='%.3f')
 
-    
-    #Create a map of a list of the position of a drug in the test file 
+
+    #Create a map of a list of the position of a drug in the test file
     def create_drug_pos_map(self):
         drug_pos_map = {d:[] for d in self.drugs}
         for i, row in self.test_df.iterrows():
@@ -59,7 +59,7 @@ class RLIPPCalculator():
             drug_corr_map[d] = stats.spearmanr(test_vals, pred_vals)[0]
         return {drug:corr for drug,corr in sorted(drug_corr_map.items(), key=lambda item:item[1], reverse=True)}
 
-    
+
     #Load the hidden file for a given term
     def load_feature(self, term, size):
         file_name = self.hidden_dir + term + '.hidden'
@@ -76,13 +76,13 @@ class RLIPPCalculator():
         return feature_map
 
 
-    #Get a hidden feature matrix of a given term's children 
+    #Get a hidden feature matrix of a given term's children
     def get_child_features(self, feature_map, term, index_list):
         child_features = []
         children = [row['T'] for _,row in self.ontology.iterrows() if row['S']==term]
         for child in children:
             child_features.append(np.take(feature_map[child], index_list, axis=0))
-        return np.column_stack((f for f in child_features))
+        return np.column_stack([f for f in child_features])
 
 
     #Executes 5-fold cross validated Ridge regression for a given hidden features matrix
@@ -100,10 +100,10 @@ class RLIPPCalculator():
         print('Starting score calculation')
         outf = open(self.out_file, "w")
         outf.write('Drug\tTerm\tP_rho\tC_rho\tRLIPP\n')
-        
+
         drug_pos_map = self.create_drug_pos_map()
         sorted_drugs = self.create_drug_corr_map_sorted(drug_pos_map).keys()
-        
+
         feature_map = self.load_all_features()
         print('feature map created')
         for i,d in enumerate(sorted_drugs):
@@ -120,4 +120,3 @@ class RLIPPCalculator():
                 outf.write(result)
             print('Drug ' + str(i+1) + ' complete!')
         outf.close()
-
