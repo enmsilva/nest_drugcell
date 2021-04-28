@@ -8,7 +8,7 @@ import pandas as pd
 class RLIPPCalculator():
 
     def __init__(self, args):
-        self.ontology = pd.read_csv(args.ontology, sep='\t', header=None, names=['S', 'T', 'I'])
+        self.ontology = pd.read_csv(args.ontology, sep='\t', header=None, names=['S', 'T', 'I'], dtype={0:str, 1:str, 2:str})
         self.test_df = pd.read_csv(args.test, sep='\t', header=None, names=['C', 'D', 'AUC'])
         self.predicted_vals = np.loadtxt(args.predicted)
         self.drugs = pd.read_csv(args.drug_index, sep='\t', header=None, names=['I', 'D'])['D']
@@ -27,7 +27,7 @@ class RLIPPCalculator():
 
         self.num_hiddens_genotype = args.genotype_hiddens
 
-        self.terms = [str(t) for t in self.ontology['S'].unique().tolist()]
+        self.terms = self.ontology['S'].unique().tolist()
 
         self.create_gene_hidden_files()
 
