@@ -72,7 +72,10 @@ class NNTrainer():
 				total_loss = 0
 				for name, output in aux_out_map.items():
 					loss = nn.MSELoss()
-					total_loss += loss(output, cuda_labels)
+					if name == 'final':
+						total_loss += loss(output, cuda_labels)
+					#else:
+					#	total_loss += 0.2 * loss(output, cuda_labels)
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():
