@@ -4,7 +4,7 @@
 #SBATCH --partition=nrnb-gpu
 #SBATCH --nodelist=nrnb-gpu-02
 #SBATCH --gres=gpu:1
-#SBATCH --mem=64G
+#SBATCH --mem=128G
 #SBATCH --dependency=singleton
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
