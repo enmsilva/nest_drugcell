@@ -28,8 +28,9 @@ class OptunaNNTrainer(NNTrainer):
 
 	def setup_trials(self, trial):
 
-		self.data_wrapper.genotype_hiddens = trial.suggest_int("neurons_per_node", 1, 12)
-		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
+		#self.data_wrapper.genotype_hiddens = trial.suggest_int("neurons_per_node", 1, 12)
+		#self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
+		self.alpha = trial.suggest_float("alpha", 0.1, 1.0)
 
 		print("Learning rate = %f\tNeurons = %d" %(self.data_wrapper.learning_rate, self.data_wrapper.num_hiddens_genotype))
 
@@ -86,7 +87,10 @@ class OptunaNNTrainer(NNTrainer):
 				total_loss = 0
 				for name, output in aux_out_map.items():
 					loss = nn.MSELoss()
-					total_loss += loss(output, cuda_labels)
+					if name == 'final':
+						total_loss += loss(output, cuda_labels)
+					else:
+						total_loss += self.alpha * loss(output, cuda_labels)
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():
