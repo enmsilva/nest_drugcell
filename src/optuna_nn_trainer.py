@@ -32,7 +32,8 @@ class OptunaNNTrainer(NNTrainer):
 		#self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
 		self.alpha = trial.suggest_float("alpha", 0.1, 1.0)
 
-		print("Learning rate = %f\tNeurons = %d" %(self.data_wrapper.learning_rate, self.data_wrapper.num_hiddens_genotype))
+		for key, value in trial.params.items():
+			print("{}: {}".format(key, value))
 
 
 	def train_model(self, trial):
@@ -141,16 +142,16 @@ class OptunaNNTrainer(NNTrainer):
 		pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
 		complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
 
-		print("Study statistics: ")
-		print("  Number of finished trials: ", len(study.trials))
-		print("  Number of pruned trials: ", len(pruned_trials))
-		print("  Number of complete trials: ", len(complete_trials))
+		print("Study statistics:")
+		print("Number of finished trials:", len(study.trials))
+		print("Number of pruned trials:", len(pruned_trials))
+		print("Number of complete trials:", len(complete_trials))
 
 		print("Best trial:")
 		trial = study.best_trial
 
-		print("  Value: ", trial.value)
+		print("Value: ", trial.value)
 
-		print("  Params: ")
+		print("Params:")
 		for key, value in trial.params.items():
-			print("    {}: {}".format(key, value))
+			print("{}: {}".format(key, value))
