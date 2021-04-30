@@ -111,7 +111,7 @@ class NNTrainer():
 				max_corr = val_corr
 
 			epoch_end_time = time.time()
-			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, epoch_loss, epoch_end_time - epoch_start_time))
+			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
 
 		self.finalize_variance()
