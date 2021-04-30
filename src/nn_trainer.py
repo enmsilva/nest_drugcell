@@ -52,7 +52,6 @@ class NNTrainer():
 			# Train
 			self.model.train()
 			train_predict = torch.zeros(0, 0).cuda(self.data_wrapper.cuda)
-			epoch_loss = 0
 
 			for i, (inputdata, labels) in enumerate(train_loader):
 				# Convert torch tensor to Variable
@@ -75,10 +74,9 @@ class NNTrainer():
 					loss = nn.MSELoss()
 					if name == 'final':
 						total_loss += loss(output, cuda_labels)
-					#else:
-					#	total_loss += 0.2 * loss(output, cuda_labels)
+					else:
+						total_loss += 0.2 * loss(output, cuda_labels)
 				total_loss.backward()
-				epoch_loss += total_loss
 
 				for name, param in self.model.named_parameters():
 					if '_direct_gene_layer.weight' not in name:
