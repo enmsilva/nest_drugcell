@@ -131,7 +131,7 @@ class DrugCellNN(nn.Module):
 		gene_input = x.narrow(1, 0, self.gene_dim)
 		drug_input = x.narrow(1, self.gene_dim, self.drug_dim)
 
-		# define forward function for genotype dcell #############################################
+		# define forward function for genotype arm #############################################
 		term_gene_out_map = {}
 
 		for term, _ in self.term_direct_gene_map.items():
@@ -152,7 +152,7 @@ class DrugCellNN(nn.Module):
 				if term in self.term_direct_gene_map:
 					child_input_list.append(term_gene_out_map[term])
 
-				child_input = torch.cat(child_input_list,1)
+				child_input = torch.cat(child_input_list, 1)
 
 				term_NN_out = self._modules[term+'_linear_layer'](child_input)
 
@@ -161,11 +161,11 @@ class DrugCellNN(nn.Module):
 				aux_layer1_out = torch.tanh(self._modules[term+'_aux_linear_layer1'](term_NN_out_map[term]))
 				aux_out_map[term] = self._modules[term+'_aux_linear_layer2'](aux_layer1_out)
 
-		# define forward function for drug dcell #################################################
+		# define forward function for drug arm #################################################
 		drug_out = drug_input
 
 		for i in range(1, len(self.num_hiddens_drug)+1, 1):
-			drug_out = self._modules['drug_batchnorm_layer_'+str(i)]( torch.tanh(self._modules['drug_linear_layer_' + str(i)](drug_out)))
+			drug_out = self._modules['drug_batchnorm_layer_'+str(i)]( torch.tanh(self._modules['drug_linear_layer_'+str(i)](drug_out)))
 			term_NN_out_map['drug_'+str(i)] = drug_out
 
 			aux_layer1_out = torch.tanh(self._modules['drug_aux_linear_layer1_'+str(i)](drug_out))

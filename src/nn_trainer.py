@@ -52,6 +52,7 @@ class NNTrainer():
 			# Train
 			self.model.train()
 			train_predict = torch.zeros(0, 0).cuda(self.data_wrapper.cuda)
+			total_loss = 0
 
 			for i, (inputdata, labels) in enumerate(train_loader):
 				# Convert torch tensor to Variable
@@ -69,7 +70,6 @@ class NNTrainer():
 				else:
 					train_predict = torch.cat([train_predict, aux_out_map['final'].data], dim = 0)
 
-				total_loss = 0
 				for name, output in aux_out_map.items():
 					loss = nn.MSELoss()
 					if name == 'final':
