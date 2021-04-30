@@ -4,6 +4,7 @@ hidden/
 models/
 src/__pycache__/
 *.log
+*/*.log
 .project
 .pydevproject
 .vscode/
