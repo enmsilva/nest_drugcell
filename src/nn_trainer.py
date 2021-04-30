@@ -52,7 +52,7 @@ class NNTrainer():
 			# Train
 			self.model.train()
 			train_predict = torch.zeros(0, 0).cuda(self.data_wrapper.cuda)
-			total_loss = 0
+			epoch_loss = 0
 
 			for i, (inputdata, labels) in enumerate(train_loader):
 				# Convert torch tensor to Variable
@@ -70,6 +70,7 @@ class NNTrainer():
 				else:
 					train_predict = torch.cat([train_predict, aux_out_map['final'].data], dim = 0)
 
+				total_loss = 0
 				for name, output in aux_out_map.items():
 					loss = nn.MSELoss()
 					if name == 'final':
@@ -77,6 +78,7 @@ class NNTrainer():
 					#else:
 					#	total_loss += 0.2 * loss(output, cuda_labels)
 				total_loss.backward()
+				epoch_loss += total_loss
 
 				for name, param in self.model.named_parameters():
 					if '_direct_gene_layer.weight' not in name:
@@ -111,7 +113,7 @@ class NNTrainer():
 				max_corr = val_corr
 
 			epoch_end_time = time.time()
-			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
+			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, epoch_loss, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
 
 		self.finalize_variance()
