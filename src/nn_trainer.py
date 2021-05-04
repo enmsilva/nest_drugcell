@@ -1,3 +1,4 @@
+import numpy as np
 import time
 import torch
 import torch.nn as nn
@@ -116,8 +117,10 @@ class NNTrainer():
 
 		self.finalize_variance()
 		mean_variance_map, mean_viann_score_map = self.calc_feature_importance(term_mask_map)
+		mutations_per_gene = np.count_nonzero(self.data_wrapper.cell_features.transpose() == 1, axis=1)
 		for gene, score in viann_score_map.items():
-			print("Gene %s\t Variance %.4f\t VIANN_score %.4f" % (gene, mean_variance_map[gene], score))
+			mut_freq = mutations_per_gene[self.data_wrapper.gene_id_mapping[gene]]/len(mutations_per_gene)
+			print("Gene %s\t Mutation_frequency %.4f\t Variance %.4f\t VIANN_score %.4f" % (gene, mut_freq, mean_variance_map[gene], score))
 
 		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
