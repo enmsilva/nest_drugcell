@@ -110,6 +110,7 @@ class NNTrainer():
 
 			if val_corr >= max_corr:
 				max_corr = val_corr
+				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 			epoch_end_time = time.time()
 			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
@@ -121,8 +122,6 @@ class NNTrainer():
 		for gene, score in viann_score_map.items():
 			mut_freq = mutations_per_gene[self.data_wrapper.gene_id_mapping[gene]]/len(mutations_per_gene)
 			print("Gene %s\t Mutation_frequency %.4f\t Variance %.4f\t VIANN_score %.4f" % (gene, mut_freq, mean_variance_map[gene], score))
-
-		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 		return max_corr
 
