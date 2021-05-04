@@ -120,7 +120,7 @@ class NNTrainer():
 		mean_variance_map, mean_viann_score_map = self.calc_feature_importance(term_mask_map)
 		mutations_per_gene = np.count_nonzero(self.data_wrapper.cell_features.transpose() == 1, axis=1)
 		for gene, score in mean_viann_score_map.items():
-			mut_freq = mutations_per_gene[self.data_wrapper.gene_id_mapping[gene]]/len(mutations_per_gene)
+			mut_freq = mutations_per_gene[self.data_wrapper.gene_id_mapping[gene]]
 			print("Gene %s\t Mutation_frequency %.4f\t Variance %.4f\t VIANN_score %.4f" % (gene, mut_freq, mean_variance_map[gene], score))
 
 		return max_corr
@@ -162,14 +162,14 @@ class NNTrainer():
 				variance_sum[gene_id] += feature_variance_list[i]
 				viann_scores[gene_id] += weighted_variance_list[i]
 				viann_freq[gene_id] += 1
-
+		print(viann_scores, variance_sum, viann_freq)
 		mean_viann_score_map = {}
 		mean_variance_map = {}
 		for i, gene in enumerate(self.data_wrapper.gene_id_mapping.keys()):
 			mean_variance_map[gene] = variance_sum[i].item()/viann_freq[i].item()
 			mean_viann_score_map[gene] = viann_scores[i].item()/viann_freq[i].item()
-
+		print(mean_variance_map, mean_viann_score_map)
 		mean_variance_map = {g:v for g,v in sorted(mean_variance_map.items(), key=lambda item:item[1], reverse=True)}
 		mean_viann_score_map = {g:sc for g,sc in sorted(mean_viann_score_map.items(), key=lambda item:item[1], reverse=True)}
-
+		print(mean_variance_map, mean_viann_score_map)
 		return mean_variance_map, mean_viann_score_map
