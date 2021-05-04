@@ -22,7 +22,7 @@ class OptunaNNTrainer(NNTrainer):
 
 	def exec_study(self):
 		study = optuna.create_study(direction="maximize")
-		study.optimize(self.train_model, n_trials=30)
+		study.optimize(self.train_model, n_trials=10)
 		self.print_result(study)
 
 
@@ -30,7 +30,7 @@ class OptunaNNTrainer(NNTrainer):
 
 		#self.data_wrapper.genotype_hiddens = trial.suggest_int("neurons_per_node", 1, 12)
 		#self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
-		self.alpha = trial.suggest_float("alpha", 0.1, 1.0)
+		self.alpha = trial.suggest_discrete_uniform(("alpha", 0.1, 1.0, 0.1)
 
 		for key, value in trial.params.items():
 			print("{}: {}".format(key, value))
