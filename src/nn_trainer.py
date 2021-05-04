@@ -46,7 +46,7 @@ class NNTrainer():
 		optimizer = torch.optim.Adam(self.model.parameters(), lr = self.data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
 		optimizer.zero_grad()
 
-		self.term_feature_variance_map = {}
+		self.term_feature_variance_map = {} # Map of term -> list of variance of every gene part of that term
 
 		for epoch in range(self.data_wrapper.epochs):
 			# Train
@@ -115,16 +115,16 @@ class NNTrainer():
 			epoch_start_time = epoch_end_time
 
 		self.finalize_variance()
-		viann_score_map = self.calc_feature_importance(term_mask_map)
-		viann_score_map = {g:sc for g,sc in sorted(viann_score_map.items(), key=lambda item:item[1], reverse=True)}
+		mean_variance_map, mean_viann_score_map = self.calc_feature_importance(term_mask_map)
 		for gene, score in viann_score_map.items():
-			print(gene, score)
+			print("Gene %s\t Variance %.4f\t VIANN_score %.4f" % (gene, mean_variance_map[gene], score))
 
 		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 		return max_corr
 
 
+	# Update Variance of every gene per term using Welford's online method
 	def update_variance(self, term_mask_map):
 		model_weights_map = self.model.get_model_weights(term_mask_map, '_direct_gene_layer.weight')
 		for term, term_weights in model_weights_map.items():
@@ -136,6 +136,7 @@ class NNTrainer():
 			self.term_feature_variance_map[term] = feature_welford_set_list
 
 
+	# Calculate variance for every gene per term
 	def finalize_variance(self):
 		for term, feature_welford_set_list in self.term_feature_variance_map.items():
 			feature_variance_list = torch.zeros(len(feature_welford_set_list)).cuda(self.data_wrapper.cuda)
@@ -145,17 +146,28 @@ class NNTrainer():
 			self.term_feature_variance_map[term] = feature_variance_list
 
 
+	# Calculate VIANN score for every gene; VIANN score = sum(Variance x final weight)
 	def calc_feature_importance(self, term_mask_map):
 
-		viann_scores = torch.zeros(self.model.gene_dim).cuda(self.data_wrapper.cuda)
+		viann_scores = torch.zeros(self.model.gene_dim).cuda(self.data_wrapper.cuda) # List of VIANN scores of every gene; each entry contains the sum of weighted variance
+		viann_freq = torch.zeros(self.model.gene_dim).cuda(self.data_wrapper.cuda)   # No of VIANN scores of every gene = No of subsystems containing that gene
+		variance_sum = torch.zeros(self.model.gene_dim).cuda(self.data_wrapper.cuda) # List of sum of variance of every gene
 		final_weights_map = self.model.get_model_weights(term_mask_map, '_direct_gene_layer.weight')
 		for term, final_term_weights in final_weights_map.items():
 			feature_variance_list = self.term_feature_variance_map[term]
 			weighted_variance_list = torch.mul(final_term_weights, feature_variance_list)
 			for i, gene_id in enumerate(self.model.term_direct_gene_map[term]):
+				variance_sum[gene_id] += feature_variance_list[i]
 				viann_scores[gene_id] += weighted_variance_list[i]
+				viann_freq[gene_id] += 1
 
-		viann_score_map = {}
+		mean_viann_score_map = {}
+		mean_variance_map = {}
 		for i, gene in enumerate(self.data_wrapper.gene_id_mapping.keys()):
-			viann_score_map[gene] = viann_scores[i].item()
-		return viann_score_map
+			mean_variance_map[gene] = variance_sum[i].item()/viann_freq[i].item()
+			mean_viann_score_map[gene] = viann_scores[i].item()/viann_freq[i].item()
+
+		mean_variance_map = {g:v for g,v in sorted(mean_variance_map.items(), key=lambda item:item[1], reverse=True)}
+		mean_viann_score_map = {g:sc for g,sc in sorted(mean_viann_score_map.items(), key=lambda item:item[1], reverse=True)}
+
+		return mean_variance_map, mean_viann_score_map
