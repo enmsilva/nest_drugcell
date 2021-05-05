@@ -159,7 +159,7 @@ class NNTrainer():
 		final_weights_map = self.model.get_model_weights(term_mask_map, '_direct_gene_layer.weight')
 		for term, final_term_weights in final_weights_map.items():
 			feature_variance_list = self.term_feature_variance_map[term]
-			weighted_variance_list = torch.mul(final_term_weights, feature_variance_list)
+			weighted_variance_list = torch.mul(torch.abs(final_term_weights), feature_variance_list)
 			for i, gene_id in enumerate(self.model.term_direct_gene_map[term]):
 				variance_sum[gene_id] += feature_variance_list[i]
 				viann_scores[gene_id] += weighted_variance_list[i]
