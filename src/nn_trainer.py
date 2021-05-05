@@ -117,13 +117,12 @@ class NNTrainer():
 			epoch_start_time = epoch_end_time
 
 		self.finalize_variance()
-		mean_variance_map, mean_viann_score_map = self.calc_feature_importance(term_mask_map)
-		mean_variance_map = {g:v for g,v in sorted(mean_variance_map.items(), key=lambda item:item[1], reverse=True)}
-		mean_viann_score_map = {g:sc for g,sc in sorted(mean_viann_score_map.items(), key=lambda item:item[1], reverse=True)}
+		variance_map, viann_score_map, viann_freq_map = self.calc_feature_importance(term_mask_map)
+		viann_score_map = {g:sc for g,sc in sorted(viann_score_map.items(), key=lambda item:item[1], reverse=True)}
 		mutations_per_gene = np.count_nonzero(self.data_wrapper.cell_features.transpose() == 1, axis=1)
-		for gene, score in mean_viann_score_map.items():
-			mut_freq = mutations_per_gene[self.data_wrapper.gene_id_mapping[gene]]
-			print("Gene {}\t Mutation_frequency {:.1f}\t Variance {:.2e}\t VIANN_score {:.2e}".format(gene, mut_freq, mean_variance_map[gene], score))
+		for g, score in viann_score_map.items():
+			mut_freq = mutations_per_gene[self.data_wrapper.gene_id_mapping[g]]
+			print("Gene {}\tMutations {:.0f}\tMean_Var {:.2e}\tMean_VIANN {:.2e}\tT_Var {:.2e}\tT_VIANN {:.2e}".format(g, mut_freq, variance_map[g]/viann_freq_map[g], score/viann_freq_map[g], variance_map[g], score))
 
 		return max_corr
 
@@ -164,9 +163,11 @@ class NNTrainer():
 				variance_sum[gene_id] += feature_variance_list[i]
 				viann_scores[gene_id] += weighted_variance_list[i]
 				viann_freq[gene_id] += 1
-		mean_viann_score_map = {}
-		mean_variance_map = {}
+		viann_score_map = {}
+		variance_map = {}
+		viann_freq_map = {}
 		for i, gene in enumerate(self.data_wrapper.gene_id_mapping.keys()):
-			mean_variance_map[gene] = variance_sum[i].item()/viann_freq[i].item()
-			mean_viann_score_map[gene] = viann_scores[i].item()/viann_freq[i].item()
-		return mean_variance_map, mean_viann_score_map
+			variance_map[gene] = variance_sum[i].item()
+			viann_score_map[gene] = viann_scores[i].item()
+			viann_freq_map[gene] = int(viann_freq[i].item())
+		return variance_map, viann_score_map, viann_freq_map
