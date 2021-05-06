@@ -30,7 +30,7 @@ class OptunaNNTrainer(NNTrainer):
 
 		#self.data_wrapper.genotype_hiddens = trial.suggest_int("neurons_per_node", 1, 12)
 		#self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
-		self.alpha = trial.suggest_discrete_uniform("alpha", 0.1, 1.0, 0.1)
+		self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4])
 
 		for key, value in trial.params.items():
 			print("{}: {}".format(key, value))
