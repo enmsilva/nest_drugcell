@@ -114,7 +114,7 @@ class NNTrainer():
 				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 			epoch_end_time = time.time()
-			print("epoch {}\ttrain_corr {.4f}\tval_corr {.4f}\ttotal_loss {.4f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
+			print("epoch {}\ttrain_corr {:.3f}\tval_corr {:.3f}\ttotal_loss {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
 
 		self.finalize_variance()
