@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=NeST_DrugCell_CPU
+#SBATCH --job-name=NeST_DrugCell_EN
 #SBATCH --output=cpu_out.log
 #SBATCH --partition=nrnb-compute
 #SBATCH --nodelist=nrnb-cn-08
@@ -7,5 +7,5 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-bash "${homedir}/scripts/elastic_net.sh" $homedir $1
+bash "${homedir}/scripts/elastic_net.sh" $homedir
 
