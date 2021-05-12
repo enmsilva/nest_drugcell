@@ -7,5 +7,5 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-bash "${homedir}/scripts/rlipp_exec.sh" $homedir
+bash "${homedir}/scripts/rlipp.sh" $homedir $1
 

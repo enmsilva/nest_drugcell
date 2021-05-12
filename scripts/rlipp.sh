@@ -2,7 +2,7 @@
 
 homedir=$1
 hidden="${homedir}/rlipp/hidden"
-ontology="${homedir}/data/NeST_ont_${2}.txt"
+ontology="${homedir}/data/NeST_${2}_ont.txt"
 drug_index="${homedir}/data/drug2ind.txt"
 gene_index="${homedir}/data/gene2ind_${2}.txt"
 cell_index="${homedir}/data/cell2ind.txt"
@@ -24,5 +24,5 @@ fi
 
 python -u ${homedir}/src/rlipp_helper.py -hidden $hidden -ontology $ontology \
 	-drug_index $drug_index -gene_index $gene_index -cell_index $cell_index \
-	-cell_mutation $cell_mutation -output $output -test $test -predicted $predicted -drug_count 684 -genotype_hiddens 6
+	-cell_mutation $cell_mutation -output $output -test $test -predicted $predicted -drug_count 0 -genotype_hiddens 6
 

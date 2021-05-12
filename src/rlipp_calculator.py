@@ -23,7 +23,7 @@ class RLIPPCalculator():
 
         self.drug_count = args.drug_count
         if self.drug_count == 0:
-            self.drug_count = len(drugs)
+            self.drug_count = len(self.drugs)
 
         self.num_hiddens_genotype = args.genotype_hiddens
 

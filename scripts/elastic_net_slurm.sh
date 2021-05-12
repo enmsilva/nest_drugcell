@@ -7,5 +7,5 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-bash "${homedir}/scripts/elastic_net.sh" $homedir
+bash "${homedir}/scripts/elastic_net.sh" $homedir $1
 
