@@ -1,14 +1,14 @@
 #!/bin/bash
 homedir=$1
-gene2idfile="${homedir}/data/gene2ind_clinical_trial.txt"
+gene2idfile="${homedir}/data/gene2ind_${2}.txt"
 cell2idfile="${homedir}/data/cell2ind.txt"
 drug2idfile="${homedir}/data/drug2ind.txt"
-ontfile="${homedir}/data/NeST_clinical_trial_ont.txt"
-mutationfile="${homedir}/data/cell2mutation_clinical_trial.txt"
+ontfile="${homedir}/data/ontology_${2}.txt"
+mutationfile="${homedir}/data/cell2mutation_${2}.txt"
 drugfile="${homedir}/data/drug2fingerprint.txt"
 traindatafile="${homedir}/data/drugcell_all.txt"
 
-modeldir="${homedir}/models"
+modeldir="${homedir}/model_${2}"
 if [ -d $modeldir ]
 then
 	rm -rf $modeldir

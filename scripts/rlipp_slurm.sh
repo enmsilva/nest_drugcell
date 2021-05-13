@@ -5,7 +5,5 @@
 #SBATCH --nodelist=nrnb-cn-08
 #SBATCH --mem=64G
 
-homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
-
-bash "${homedir}/scripts/rlipp.sh" $homedir $1
+bash "${1}/scripts/rlipp.sh" $1 $2
 
