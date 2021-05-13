@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=NeST_DrugCell_${2}
+#SBATCH --job-name=NeST_DrugCell
 #SBATCH --output=out.log
 #SBATCH --partition=nrnb-gpu
 #SBATCH --nodelist=nrnb-gpu-01
