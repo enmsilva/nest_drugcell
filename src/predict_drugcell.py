@@ -53,7 +53,7 @@ def predict_dcell(predict_data, gene_dim, drug_dim, model_file, hidden_folder, b
 	test_corr = util.pearson_corr(test_predict, predict_label_gpu)
 	print("Test pearson corr\t%s\t%.6f" % (model.root, test_corr))
 
-	np.savetxt(result_file+'/drugcell.predict', test_predict.cpu().numpy(),'%.4e')
+	np.savetxt(result_file', test_predict.cpu().numpy(),'%.4e')
 
 
 parser = argparse.ArgumentParser(description='Predict DrugCell')
@@ -64,7 +64,7 @@ parser.add_argument('-drug2id', help='Drug to ID mapping file', type=str)
 parser.add_argument('-cell2id', help='Cell to ID mapping file', type=str)
 parser.add_argument('-load', help='Model file', type=str)
 parser.add_argument('-hidden', help='Hidden output folder', type=str, default='hidden/')
-parser.add_argument('-result', help='Result file name', type=str, default='result/')
+parser.add_argument('-result', help='Result file name', type=str, default='result/drugcell.predict')
 parser.add_argument('-cuda', help='Specify GPU', type=int, default=0)
 parser.add_argument('-genotype', help='Mutation information for cell lines', type=str)
 parser.add_argument('-fingerprint', help='Morgan fingerprint representation for drugs', type=str)
