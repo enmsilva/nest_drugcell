@@ -7,14 +7,15 @@ mutationfile="${homedir}/data/cell2mutation_${2}.txt"
 drugfile="${homedir}/data/drug2fingerprint.txt"
 testdatafile="${homedir}/data/drugcell_all.txt"
 
-modelfile="${homedir}/model_${2}/model_final.pt"
+modeldir="${homedir}/model_${2}"
+modelfile="${modeldir}/model_final.pt"
 
 resultdir="${homedir}/result"
 mkdir -p $resultdir
 
 resultfile="${resultdir}/predict_all_${2}.txt"
 
-hiddendir="${homedir}/hidden_${2}"
+hiddendir="${modeldir}/hidden"
 if [ -d $hiddendir ]
 then
 	rm -rf $hiddendir
@@ -29,5 +30,5 @@ source activate cuda11_env
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultfile \
-	-batchsize 10000 -predict $testdatafile -load $modelfile -cuda $cudaid > test.log
+	-batchsize 10000 -predict $testdatafile -load $modelfile -cuda $cudaid > "${modeldir}/test.log"
 

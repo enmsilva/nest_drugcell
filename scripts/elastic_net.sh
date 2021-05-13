@@ -6,7 +6,7 @@ gene_index="${homedir}/data/gene2ind_$2.txt"
 cell_index="${homedir}/data/cell2ind.txt"
 cell_mutation="${homedir}/data/cell2mutation_$2.txt"
 drug_fingerprint="${homedir}/data/drug2fingerprint.txt"
-output="${homedir}/result/elastic_net_$2.predict"
+output="${homedir}/result/elastic_net_predict_${2}.txt"
 train="${homedir}/data/drugcell_all.txt"
 test="${homedir}/data/drugcell_all.txt"
 

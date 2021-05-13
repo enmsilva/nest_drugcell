@@ -2,7 +2,7 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-for ontology in clinical_trial mf_326 random bb
+for ontology in clinical_trial mf_326 bb
 do
 	for i in {1..5}
 	do
