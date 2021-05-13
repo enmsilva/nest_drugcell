@@ -8,8 +8,11 @@ drugfile="${homedir}/data/drug2fingerprint.txt"
 testdatafile="${homedir}/data/drugcell_all.txt"
 
 modelfile="${homedir}/model_${2}/model_final.pt"
+
 resultdir="${homedir}/result"
 mkdir -p $resultdir
+
+resultfile="${resultdir}/predict_all_${2}.txt"
 
 hiddendir="${homedir}/hidden_${2}"
 if [ -d $hiddendir ]
@@ -25,7 +28,6 @@ pyScript="${homedir}/src/predict_drugcell.py"
 source activate cuda11_env
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
-	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultdir \
+	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultfile \
 	-batchsize 10000 -predict $testdatafile -load $modelfile -cuda $cudaid > test.log
 
-mv ${resultdir}/drugcell.predict ${resultdir}/drugcell_all.predict
