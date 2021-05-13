@@ -2,7 +2,10 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-for i in {1..5}
+for ontology in clinical_trial random bb
 do
-	sbatch ${homedir}/scripts/cv_batch.sh $i
+	for i in {1..5}
+	do
+		sbatch ${homedir}/scripts/cv_batch.sh $homedir $ontology $i
+	done
 done

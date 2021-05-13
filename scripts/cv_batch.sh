@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=NeST_DrugCell
+#SBATCH --job-name=NeST_DrugCell_${2}
 #SBATCH --output=out.log
 #SBATCH --partition=nrnb-gpu
 #SBATCH --nodelist=nrnb-gpu-01
@@ -7,7 +7,5 @@
 #SBATCH --mem=128G
 #SBATCH --dependency=singleton
 
-homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
-
-bash "${homedir}/scripts/cv_train.sh" $homedir $1
-bash "${homedir}/scripts/cv_test_gpu.sh" $homedir $1
+bash "${1}/scripts/cv_train.sh" $1 $2 $3
+bash "${1}/scripts/cv_test_gpu.sh" $1 $2 $3
