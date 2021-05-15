@@ -1,8 +1,8 @@
 #!/bin/bash
 
-homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
+homedir="/cellar/users/asinghal/Workspace/ddram_drugcell"
 
-for ontology in clinical_trial mf_326 bb
+for ontology in ddram ddram_bb
 do
 	for i in {1..5}
 	do
