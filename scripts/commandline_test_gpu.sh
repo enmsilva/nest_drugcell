@@ -13,7 +13,7 @@ modelfile="${modeldir}/model_final.pt"
 resultdir="${homedir}/result"
 mkdir -p $resultdir
 
-resultfile="${resultdir}/predict_all_${2}.txt"
+resultfile="${resultdir}/predict_all_${2}"
 
 hiddendir="${modeldir}/hidden"
 if [ -d $hiddendir ]
@@ -31,4 +31,3 @@ source activate cuda11_env
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultfile \
 	-batchsize 10000 -predict $testdatafile -load $modelfile -cuda $cudaid > "${modeldir}/test.log"
-
