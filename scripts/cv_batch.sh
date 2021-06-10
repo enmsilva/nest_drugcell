@@ -2,6 +2,7 @@
 #SBATCH --job-name=NeST_DrugCell
 #SBATCH --output=out.log
 #SBATCH --partition=nrnb-gpu
+#SBATCH --account=nrnb-gpu
 #SBATCH --gres=gpu:1
 #SBATCH --mem=128G
 #SBATCH --dependency=singleton
