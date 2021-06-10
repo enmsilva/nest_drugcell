@@ -2,7 +2,7 @@
 
 homedir="/cellar/users/asinghal/Workspace/ddram_drugcell"
 
-for ontology in ddram ddram_bb
+for ontology in ddram ddram_bb_a ddram_bb_b ddram_bb_c ddram_bb_d ddram_bb_e
 do
 	for i in {1..5}
 	do

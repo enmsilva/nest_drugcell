@@ -10,7 +10,7 @@ cell_mutation="${homedir}/data/cell2mutation_${2}.txt"
 output="${homedir}/result/rlipp.out"
 
 test="${homedir}/data/drugcell_all.txt"
-predicted="${homedir}/result/drugcell_all.predict"
+predicted="${homedir}/result/predict_all_${2}.txt"
 
 rlippdir="${homedir}/rlipp"
 mkdir -p $rlippdir
@@ -18,7 +18,7 @@ mkdir -p $rlippdir
 if [ ! -d $hidden ]
 then
 	mkdir $hidden
-	cp -r "${homedir}/model_${2}/hidden/*" "${hidden}/"
+	cp "${homedir}/model_${2}/hidden/*" "${hidden}/"
 fi
 
 
