@@ -8,7 +8,7 @@ cell_index="${homedir}/data/cell2ind.txt"
 cell_mutation="${homedir}/data/cell2mutation_${2}.txt"
 test="${homedir}/data/drugcell_all.txt"
 output="${homedir}/result/rlipp.out"
-predicted="${homedir}/result/drugcell_all.predict"
+predicted="${homedir}/result/predict_all_${2}.txt"
 
 rlippdir="${homedir}/rlipp"
 mkdir -p $rlippdir
