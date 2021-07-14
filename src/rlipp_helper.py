@@ -14,11 +14,12 @@ def main():
 	parser.add_argument('-cell_index', help = 'Cell-index file', type = str)
 	parser.add_argument('-cell_mutation', help = 'Cell line mutation file', type = str)
 	parser.add_argument('-output', help = 'Output file', type = str)
+	parser.add_argument('-cpu_count', help = 'No of available cores', type = int, default = 1)
 	parser.add_argument('-drug_count', help = 'No of top performing drugs', type = int, default = 0)
 	parser.add_argument('-genotype_hiddens', help = 'Mapping for the number of neurons in each term in genotype parts', type = int, default = 6)
-	
+
 	cmd_args = parser.parse_args()
-	
+
 	rlipp_calculator = RLIPPCalculator(cmd_args)
 	rlipp_calculator.calc_scores()
 
