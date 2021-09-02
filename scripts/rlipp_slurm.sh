@@ -2,7 +2,7 @@
 #SBATCH --job-name=NeST_DrugCell_RLIPP
 #SBATCH --output=cpu_out.log
 #SBATCH --partition=nrnb-compute
-#SBATCH --nodelist=nrnb-cn-01
+#SBATCH --nodelist=nrnb-cn-02
 #SBATCH --account=nrnb
 #SBATCH --mem=256G
 #SBATCH --cpus-per-task=60

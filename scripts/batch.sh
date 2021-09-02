@@ -7,5 +7,5 @@
 #SBATCH --mem=128G
 #SBATCH --dependency=singleton
 
-#bash "${1}/scripts/commandline_train.sh" $1 $2
+bash "${1}/scripts/commandline_train.sh" $1 $2
 bash "${1}/scripts/commandline_test_gpu.sh" $1 $2
