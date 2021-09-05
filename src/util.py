@@ -94,3 +94,29 @@ def update_variance(welford_set, new_weight):
 	delta2 = abs(new_weight - mean)
 	M2 += delta * delta2
 	return (n, mean, M2)
+
+
+def get_grad_norm(model_params, norm_type):
+	"""Gets gradient norm of an iterable of model_params.
+	The norm is computed over all gradients together, as if they were
+	concatenated into a single vector. Gradients are modified in-place.
+	Arguments:
+		model_params (Iterable[Tensor] or Tensor): an iterable of Tensors or a
+			single Tensor that will have gradients normalized
+		norm_type (float or int): type of the used p-norm. Can be ``'inf'`` for
+			infinity norm.
+	Returns:Total norm of the model_params (viewed as a single vector).
+	"""
+	if isinstance(model_params, torch.Tensor): # check if parameters are tensorobject
+		model_params = [model_params] # change to list
+	model_params = [p for p in model_params if p.grad is not None] # get list of params with grads
+	norm_type = float(norm_type) # make sure norm_type is of type float
+	if len(model_params) == 0: # if no params provided, return tensor of 0
+		return torch.tensor(0.)
+	
+	device = model_params[0].grad.device # get device
+	if norm_type == inf: # infinity norm
+		total_norm = max(p.grad.detach().abs().max().to(device) for p in model_params)
+	else: # total norm
+		total_norm = torch.norm(torch.stack([torch.norm(p.grad.detach(), norm_type).to(device) for p in model_params]), norm_type)
+	return total_norm

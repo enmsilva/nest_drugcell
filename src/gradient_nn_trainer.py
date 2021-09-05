@@ -1,47 +1,29 @@
+import numpy as np
 import time
 import torch
 import torch.nn as nn
+from torch._six import inf
 import torch.optim as optim
 import torch.utils.data as du
 from torch.autograd import Variable
 from sklearn.model_selection import train_test_split
 
-import optuna
-from optuna.trial import TrialState
-
 import util
-from nn_trainer import *
 from training_data_wrapper import *
+from drugcell_nn import *
 
 
-class OptunaNNTrainer(NNTrainer):
+class GradientNNTrainer(NNTrainer):
 
 	def __init__(self, opt):
 		super().__init__(opt)
 
 
-	def exec_study(self):
-		study = optuna.create_study(direction="maximize")
-		study.optimize(self.train_model, n_trials=10)
-		self.print_result(study)
-
-
-	def setup_trials(self, trial):
-
-		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 4, 6, 8, 10, 12])
-		#self.data_wrapper.learning_rate = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
-		#self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4])
-
-		for key, value in trial.params.items():
-			print("{}: {}".format(key, value))
-
-
-	def train_model(self, trial):
+	def train_model(self):
 
 		epoch_start_time = time.time()
-		max_corr = 0
-
-		self.setup_trials(trial)
+		model_scores = []
+		pareto_front = []
 
 		train_features, train_labels = self.data_wrapper.train_data
 		train_feature, val_feature, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
@@ -66,6 +48,8 @@ class OptunaNNTrainer(NNTrainer):
 			# Train
 			self.model.train()
 			train_predict = torch.zeros(0, 0).cuda(self.data_wrapper.cuda)
+			_gradnorms = torch.empty(len(train_loader)).cuda(CUDA_ID) # tensor for accumulating grad norms from each batch in this epoch
+			epoch_scores = []
 
 			for i, (inputdata, labels) in enumerate(train_loader):
 				# Convert torch tensor to Variable
@@ -76,8 +60,7 @@ class OptunaNNTrainer(NNTrainer):
 				# Forward + Backward + Optimize
 				optimizer.zero_grad()  # zero the gradient buffer
 
-				# Here term_NN_out_map is a dictionary
-				aux_out_map, _ = self.model(cuda_features)
+				aux_out_map,_ = self.model(cuda_features)
 
 				if train_predict.size()[0] == 0:
 					train_predict = aux_out_map['final'].data
@@ -90,7 +73,7 @@ class OptunaNNTrainer(NNTrainer):
 					if name == 'final':
 						total_loss += loss(output, cuda_labels)
 					else:
-						total_loss += self.alpha * loss(output, cuda_labels)
+						total_loss += 0.2 * loss(output, cuda_labels)
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():
@@ -99,8 +82,10 @@ class OptunaNNTrainer(NNTrainer):
 					term_name = name.split('_')[0]
 					param.grad.data = torch.mul(param.grad.data, term_mask_map[term_name])
 
+				_gradnorms[i] = util.get_grad_norm(model.parameters()).unsqueeze(0) # Save gradnorm for batch
 				optimizer.step()
 
+			gradnorms = sum(_gradnorms).unsqueeze(0).cpu().numpy()[0] # Save total gradnorm for epoch
 			train_corr = util.pearson_corr(train_predict, train_label_gpu)
 
 			self.model.eval()
@@ -120,40 +105,37 @@ class OptunaNNTrainer(NNTrainer):
 
 			val_corr = util.pearson_corr(val_predict, val_label_gpu)
 
-			if val_corr >= max_corr:
-				max_corr = val_corr
-
-			trial.report(val_corr, epoch)
+			epoch_scores.append(gradnorms)
+			epoch_scores.append(val_corr)
+			model_scores.append(epoch_scores)
+			pareto_ids = self.calc_pareto_front(model_scores)
+			model_scores = model_scores[pareto_ids]
+			if epoch_scores in model_scores:
+				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
+				print("Model saved for epoch {}".format(epoch))
 
 			epoch_end_time = time.time()
-			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
+			print("epoch {}\ttrain_corr {:.3f}\tval_corr {:.3f}\ttotal_loss {:.3f}\tgrad_norm {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, gradnorms, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
 
-		# Handle pruning based on the intermediate value.
-		if trial.should_prune():
-			raise optuna.exceptions.TrialPruned()
-
-		return max_corr
+		return model_scores[-1]
 
 
-	def print_result(self, study):
+	# Calculate Pareto front for gradient norm and validation correlation
+	# scores is an [Nx2] vector where the 1st column is gradient norm
+	def calc_pareto_front(self, scores):
+		if len(objective_scores) <= 1:
+			return objective_scores
 
-		pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
-		complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
+		vec_len = scores.shape[0]
+		vec_ids = np.arange(vec_len)
+		pareto_front = np.ones(vec_len, dtype=bool)
+		for i in range(vec_len):
+			for j in range(vec_len):
+				if i == j:
+					continue
+				if (scores[j, 0] <= scores[i, 0] and scores[j, 1] > scores[i, 1]) or (scores[j, 0] < scores[i, 0] and scores[j, 1] >= scores[i, 1]):
+					pareto_front[i] = 0
+					break
 
-		print("Study statistics:")
-		print("Number of finished trials:", len(study.trials))
-		print("Number of pruned trials:", len(pruned_trials))
-		print("Number of complete trials:", len(complete_trials))
-
-		print("Best trial:")
-		trial = study.best_trial
-
-		print("Value: ", trial.value)
-
-		print("Params:")
-		for key, value in trial.params.items():
-			print("{}: {}".format(key, value))
-
-		fig_params = optuna.visualization.plot_param_importances(study)
-		fig_params.save(self.data_wrapper.modeldir + "/param_importance.png")
+		return vec_ids[pareto_front]

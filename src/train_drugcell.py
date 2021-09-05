@@ -29,9 +29,9 @@ def main():
 	opt = parser.parse_args()
 
 	if opt.optimize == 0:
-		NNTrainer(opt).train_model()
+		GradientNNTrainer(opt).train_model()
 	else:
-		OptunaNNTrainer(opt).exec_study()
+		OptunaGradientNNTrainer(opt).exec_study()
 
 
 if __name__ == "__main__":

@@ -25,7 +25,6 @@ class NNTrainer():
 	def train_model(self):
 
 		epoch_start_time = time.time()
-		best_model = 0
 		max_corr = 0
 
 		train_features, train_labels = self.data_wrapper.train_data
