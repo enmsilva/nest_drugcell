@@ -129,7 +129,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 			epoch_scores.append(val_corr)
 			model_scores.append(epoch_scores)
 			pareto_ids = self.calc_pareto_front(model_scores)
-			model_scores = model_scores[pareto_ids]
+			model_scores = [model_scores[i] for i in pareto_ids]
 
 			epoch_end_time = time.time()
 			print("epoch {}\ttrain_corr {:.3f}\tval_corr {:.3f}\ttotal_loss {:.3f}\tgrad_norm {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, gradnorms, epoch_end_time - epoch_start_time))

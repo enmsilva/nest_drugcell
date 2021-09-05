@@ -108,7 +108,7 @@ class GradientNNTrainer(NNTrainer):
 			epoch_scores.append(val_corr)
 			model_scores.append(epoch_scores)
 			pareto_ids = self.calc_pareto_front(model_scores)
-			model_scores = model_scores[pareto_ids]
+			model_scores = [model_scores[i] for i in pareto_ids]
 			if epoch_scores in model_scores:
 				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 				print("Model saved for epoch {}".format(epoch))
