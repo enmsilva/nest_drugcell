@@ -82,7 +82,7 @@ class GradientNNTrainer(NNTrainer):
 					term_name = name.split('_')[0]
 					param.grad.data = torch.mul(param.grad.data, term_mask_map[term_name])
 
-				_gradnorms[i] = util.get_grad_norm(model.parameters()).unsqueeze(0) # Save gradnorm for batch
+				_gradnorms[i] = util.get_grad_norm(self.model.parameters()).unsqueeze(0) # Save gradnorm for batch
 				optimizer.step()
 
 			gradnorms = sum(_gradnorms).unsqueeze(0).cpu().numpy()[0] # Save total gradnorm for epoch
