@@ -153,7 +153,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 		if len(scores) <= 1:
 			return scores
 
-		vec_len = scores.shape[0]
+		vec_len = len(scores)
 		vec_ids = np.arange(vec_len)
 		pareto_front = np.ones(vec_len, dtype=bool)
 		for i in range(vec_len):
