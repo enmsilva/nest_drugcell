@@ -12,8 +12,8 @@ import optuna
 from optuna.trial import TrialState
 
 import util
+from gradient_nn_trainer import *
 from training_data_wrapper import *
-from drugcell_nn import *
 
 
 class OptunaGradientNNTrainer(GradientNNTrainer):

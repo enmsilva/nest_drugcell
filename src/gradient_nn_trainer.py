@@ -9,8 +9,8 @@ from torch.autograd import Variable
 from sklearn.model_selection import train_test_split
 
 import util
+from nn_trainer import *
 from training_data_wrapper import *
-from drugcell_nn import *
 
 
 class GradientNNTrainer(NNTrainer):
