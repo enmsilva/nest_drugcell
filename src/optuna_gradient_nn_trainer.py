@@ -41,7 +41,6 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 
 		epoch_start_time = time.time()
 		model_scores = []
-		pareto_front = []
 
 		self.setup_trials(trial)
 

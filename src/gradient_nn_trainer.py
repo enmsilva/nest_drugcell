@@ -22,7 +22,6 @@ class GradientNNTrainer(NNTrainer):
 
 		epoch_start_time = time.time()
 		model_scores = []
-		pareto_front = []
 
 		train_features, train_labels = self.data_wrapper.train_data
 		train_feature, val_feature, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
@@ -108,7 +107,8 @@ class GradientNNTrainer(NNTrainer):
 			epoch_scores.append(val_corr)
 			model_scores.append(epoch_scores)
 			model_scores = self.calc_pareto_front(model_scores)
-			if epoch_scores in model_scores:
+
+			if all(epoch_scores[1] >= model_scores[:1]):
 				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 				print("Model saved for epoch {}".format(epoch))
 
