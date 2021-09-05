@@ -123,8 +123,8 @@ class GradientNNTrainer(NNTrainer):
 	# Calculate Pareto front for gradient norm and validation correlation
 	# scores is an [Nx2] vector where the 1st column is gradient norm
 	def calc_pareto_front(self, scores):
-		if len(objective_scores) <= 1:
-			return objective_scores
+		if len(scores) <= 1:
+			return scores
 
 		vec_len = scores.shape[0]
 		vec_ids = np.arange(vec_len)
