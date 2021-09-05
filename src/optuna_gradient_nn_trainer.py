@@ -160,7 +160,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 			for j in range(vec_len):
 				if i == j:
 					continue
-				if (scores[j, 0] <= scores[i, 0] and scores[j, 1] > scores[i, 1]) or (scores[j, 0] < scores[i, 0] and scores[j, 1] >= scores[i, 1]):
+				if (scores[j][0] <= scores[i][0] and scores[j][1] > scores[i][1]) or (scores[j][0] < scores[i][0] and scores[j][1] >= scores[i][1]):
 					pareto_front[i] = 0
 					break
 		pareto_ids = vec_ids[pareto_front]
