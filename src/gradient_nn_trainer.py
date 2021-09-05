@@ -110,7 +110,7 @@ class GradientNNTrainer(NNTrainer):
 
 			if all(epoch_scores[1] >= [m[1] for m in model_scores]):
 				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
-				print("Model saved for epoch {}".format(epoch))
+				print("Model saved at epoch {}".format(epoch))
 
 			epoch_end_time = time.time()
 			print("epoch {}\ttrain_corr {:.3f}\tval_corr {:.3f}\ttotal_loss {:.3f}\tgrad_norm {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, gradnorms, epoch_end_time - epoch_start_time))
