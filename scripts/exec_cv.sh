@@ -2,7 +2,7 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 
-for ontology in clinical_trial_bb_d clinical_trial_bb_e
+for ontology in cg
 do
 	for i in {1..5}
 	do

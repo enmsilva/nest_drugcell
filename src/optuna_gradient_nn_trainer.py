@@ -69,7 +69,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 			# Train
 			self.model.train()
 			train_predict = torch.zeros(0, 0).cuda(self.data_wrapper.cuda)
-			_gradnorms = torch.empty(len(train_loader)).cuda(CUDA_ID) # tensor for accumulating grad norms from each batch in this epoch
+			_gradnorms = torch.empty(len(train_loader)).cuda(self.data_wrapper.cuda) # tensor for accumulating grad norms from each batch in this epoch
 			epoch_scores = []
 
 			for i, (inputdata, labels) in enumerate(train_loader):
