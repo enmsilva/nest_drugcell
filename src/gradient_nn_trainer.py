@@ -2,7 +2,6 @@ import numpy as np
 import time
 import torch
 import torch.nn as nn
-from torch._six import inf
 import torch.optim as optim
 import torch.utils.data as du
 from torch.autograd import Variable

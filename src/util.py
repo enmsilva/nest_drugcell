@@ -1,4 +1,5 @@
 import torch
+from torch._six import inf
 import numpy as np
 
 def pearson_corr(x, y):
@@ -113,7 +114,7 @@ def get_grad_norm(model_params, norm_type):
 	norm_type = float(norm_type) # make sure norm_type is of type float
 	if len(model_params) == 0: # if no params provided, return tensor of 0
 		return torch.tensor(0.)
-	
+
 	device = model_params[0].grad.device # get device
 	if norm_type == inf: # infinity norm
 		total_norm = max(p.grad.detach().abs().max().to(device) for p in model_params)
