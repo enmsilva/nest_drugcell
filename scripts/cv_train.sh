@@ -7,11 +7,12 @@ ontfile="${homedir}/data/ontology_${2}.txt"
 mutationfile="${homedir}/data/cell2mutation_${2}.txt"
 drugfile="${homedir}/data/drug2fingerprint_cg.txt"
 traindatafile="${homedir}/data/${3}_drugcell_train_cg.txt"
+testdatafile="${homedir}/data/${3}_drugcell_test_cg.txt"
 
 modeldir="${homedir}/model_${2}_${3}"
 if [ -d $modeldir ]
 then
-        rm -rf $modeldir
+	rm -rf $modeldir
 fi
 mkdir -p $modeldir
 
@@ -22,6 +23,6 @@ pyScript="${homedir}/src/train_drugcell.py"
 source activate cuda11_env
 
 python -u $pyScript -onto $ontfile -gene2id $gene2idfile -drug2id $drug2idfile \
-	-cell2id $cell2idfile -train $traindatafile -genotype $mutationfile -fingerprint $drugfile \
-	-genotype_hiddens 6 -drug_hiddens '100,50,6' -final_hiddens 6 -model $modeldir \
-	-cuda $cudaid -batchsize 20000 -epoch 500 -optimize 0 > "${modeldir}/train.log"
+	-cell2id $cell2idfile -train $traindatafile -test $testdatafile -genotype $mutationfile \
+	-fingerprint $drugfile -genotype_hiddens 6 -drug_hiddens '100,50,6' -final_hiddens 6 \
+	-model $modeldir -cuda $cudaid -batchsize 20000 -epoch 300 -optimize 0 > "${modeldir}/train.log"

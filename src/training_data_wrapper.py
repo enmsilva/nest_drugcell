@@ -11,9 +11,9 @@ class TrainingDataWrapper():
 
 	def __init__(self, args):
 
-		self.cell_id_mapping = util.load_mapping(args.cell2id)
-		self.drug_id_mapping = util.load_mapping(args.drug2id)
-		self.gene_id_mapping = util.load_mapping(args.gene2id)
+		self.cell_id_mapping = util.load_mapping(args.cell2id, 'cell lines')
+		self.drug_id_mapping = util.load_mapping(args.drug2id, 'drugs')
+		self.gene_id_mapping = util.load_mapping(args.gene2id, 'genes')
 		self.cell_features = np.genfromtxt(args.genotype, delimiter = ',')
 		self.drug_features = np.genfromtxt(args.fingerprint, delimiter = ',')
 		self.num_hiddens_genotype = args.genotype_hiddens
@@ -27,7 +27,7 @@ class TrainingDataWrapper():
 
 		self.load_ontology(args.onto)
 
-		self.train_data = util.prepare_train_data(args.train, self.cell_id_mapping, self.drug_id_mapping)
+		self.train_data = util.prepare_train_data(args.train, args.test, self.cell_id_mapping, self.drug_id_mapping)
 
 
 	def load_ontology(self, file_name):

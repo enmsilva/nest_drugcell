@@ -5,7 +5,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data as du
 from torch.autograd import Variable
-from sklearn.model_selection import train_test_split
 
 import optuna
 from optuna.trial import TrialState
@@ -29,7 +28,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 
 	def setup_trials(self, trial):
 
-		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 4, 6, 8, 10, 12])
+		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 4, 6, 8])
 		#self.data_wrapper.learning_rate = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
 		self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4])
 
@@ -44,8 +43,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 
 		self.setup_trials(trial)
 
-		train_features, train_labels = self.data_wrapper.train_data
-		train_feature, val_feature, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
+		train_feature, train_label, val_feature, val_label = self.data_wrapper.train_data
 
 		term_mask_map = util.create_term_mask(self.model.term_direct_gene_map, self.model.gene_dim, self.data_wrapper.cuda)
 		for name, param in self.model.named_parameters():

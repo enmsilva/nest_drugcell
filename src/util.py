@@ -1,6 +1,7 @@
 import torch
 from torch._six import inf
 import numpy as np
+from sklearn.model_selection import train_test_split
 
 def pearson_corr(x, y):
 	xx = x - torch.mean(x)
@@ -26,18 +27,15 @@ def load_train_data(file_name, cell2id, drug2id):
 def prepare_predict_data(test_file, cell2id_mapping_file, drug2id_mapping_file):
 
 	# load mapping files
-	cell2id_mapping = load_mapping(cell2id_mapping_file)
-	drug2id_mapping = load_mapping(drug2id_mapping_file)
+	cell2id_mapping = load_mapping(cell2id_mapping_file, 'cell lines')
+	drug2id_mapping = load_mapping(drug2id_mapping_file, 'drugs')
 
-	test_feature, test_label = load_train_data(test_file, cell2id_mapping, drug2id_mapping)
+	test_features, test_labels = load_train_data(test_file, cell2id_mapping, drug2id_mapping)
 
-	print('Total number of cell lines = %d' % len(cell2id_mapping))
-	print('Total number of drugs = %d' % len(drug2id_mapping))
-
-	return (torch.Tensor(test_feature), torch.Tensor(test_label)), cell2id_mapping, drug2id_mapping
+	return (torch.Tensor(test_features), torch.Tensor(test_labels)), cell2id_mapping, drug2id_mapping
 
 
-def load_mapping(mapping_file):
+def load_mapping(mapping_file, mapping_type):
 
 	mapping = {}
 
@@ -48,18 +46,21 @@ def load_mapping(mapping_file):
 		mapping[line[1]] = int(line[0])
 
 	file_handle.close()
+	print('Total number of {} = {}'.format(mapping_type, len(mapping)))
 
 	return mapping
 
 
-def prepare_train_data(train_file, cell2id_mapping, drug2id_mapping):
+def prepare_train_data(train_file, test_file, cell2id_mapping, drug2id_mapping):
 
-	train_feature, train_label = load_train_data(train_file, cell2id_mapping, drug2id_mapping)
+	train_features, train_labels = load_train_data(train_file, cell2id_mapping, drug2id_mapping)
 
-	print('Total number of cell lines = %d' % len(cell2id_mapping))
-	print('Total number of drugs = %d' % len(drug2id_mapping))
+	val_features, val_labels = load_train_data(test_file, cell2id_mapping, drug2id_mapping)
+	val_size = len(train_labels) * 0.1 / len(val_labels)
+	if val_size < 1:
+		_, val_features, _, val_labels = train_test_split(val_features, val_labels, test_size=val_size, shuffle=True)
 
-	return (torch.Tensor(train_feature), torch.FloatTensor(train_label))
+	return (torch.Tensor(train_features), torch.FloatTensor(train_labels), torch.Tensor(val_features), torch.FloatTensor(val_labels))
 
 
 def build_input_vector(input_data, cell_features, drug_features):
