@@ -51,8 +51,6 @@ class TrainingDataWrapper():
 				gene_set.add(line[1])
 		file_handle.close()
 
-		print('There are', len(gene_set), 'genes')
-
 		for term in dG.nodes():
 			term_gene_set = set()
 			if term in term_direct_gene_map:
