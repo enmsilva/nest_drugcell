@@ -97,7 +97,7 @@ opt = parser.parse_args()
 torch.set_printoptions(precision=5)
 
 predict_data, cell2id_mapping, drug2id_mapping = util.prepare_predict_data(opt.predict, opt.cell2id, opt.drug2id)
-gene2id_mapping = util.load_mapping(opt.gene2id)
+gene2id_mapping = util.load_mapping(opt.gene2id, "genes")
 
 # load cell/drug features
 cell_features = np.genfromtxt(opt.genotype, delimiter=',')
