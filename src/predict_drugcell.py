@@ -110,6 +110,4 @@ drug_dim = len(drug_features[0,:])
 
 CUDA_ID = opt.cuda
 
-print("Total number of genes = %d" % num_genes)
-
 predict_drugcell(predict_data, num_genes, drug_dim, opt.load, opt.hidden, opt.batchsize, opt.result, cell_features, drug_features)
