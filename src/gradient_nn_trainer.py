@@ -100,6 +100,8 @@ class GradientNNTrainer(NNTrainer):
 					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim = 0)
 
 			val_corr = util.pearson_corr(val_predict, val_label_gpu)
+			if np.isnan(val_corr):
+				val_corr = 0.0
 
 			epoch_scores.append(gradnorms)
 			epoch_scores.append(val_corr)
