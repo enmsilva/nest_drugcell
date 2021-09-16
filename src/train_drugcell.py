@@ -28,6 +28,7 @@ def main():
 	parser.add_argument('-genotype', help = 'Mutation information for cell lines', type = str)
 	parser.add_argument('-fingerprint', help = 'Morgan fingerprint representation for drugs', type = str)
 	parser.add_argument('-optimize', help = 'Hyper-parameter optimization', type = int, default = 0)
+	parser.add_argument('-zscore_method', help='zscore method (zscore/robustz)', type=str)
 
 	opt = parser.parse_args()
 

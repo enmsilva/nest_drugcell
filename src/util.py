@@ -1,7 +1,10 @@
 import torch
 from torch._six import inf
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import robust_scale
+from sklearn.preprocessing import scale
 
 def pearson_corr(x, y):
 	xx = x - torch.mean(x)
@@ -10,27 +13,39 @@ def pearson_corr(x, y):
 	return torch.sum(xx*yy) / (torch.norm(xx, 2)*torch.norm(yy,2))
 
 
-def load_train_data(file_name, cell2id, drug2id):
+def standardize_auc(data, zscore_method):
+	if zscore_method == 'zscore':
+		data[5] = data.groupby([3,4])[2].transform(lambda x: scale(x))
+	elif zscore_method == 'robustz':
+		data[5] = data.groupby([3,4])[2].transform(lambda x: robust_scale(x))
+	else:
+		data[5] = data[2]
+
+	data.drop([2,3,4], axis=1, inplace=True)
+	return data
+
+
+def load_train_data(file_name, cell2id, drug2id, zscore_method):
 	feature = []
 	label = []
 
-	with open(file_name, 'r') as fi:
-		for line in fi:
-			tokens = line.strip().split('\t')
+	train_df = pd.read_csv(file_name, sep='\t', header=None)
+	train_df = standardize_auc(train_df, zscore_method)
 
-			feature.append([cell2id[tokens[0]], drug2id[tokens[1]]])
-			label.append([float(tokens[2])])
+	for _,row in train_df.iterrows():
+		feature.append([cell2id[row[0]], drug2id[row[1]]])
+		label.append([float(row[2])])
 
 	return feature, label
 
 
-def prepare_predict_data(test_file, cell2id_mapping_file, drug2id_mapping_file):
+def prepare_predict_data(test_file, cell2id_mapping_file, drug2id_mapping_file, zscore_method):
 
 	# load mapping files
 	cell2id_mapping = load_mapping(cell2id_mapping_file, 'cell lines')
 	drug2id_mapping = load_mapping(drug2id_mapping_file, 'drugs')
 
-	test_features, test_labels = load_train_data(test_file, cell2id_mapping, drug2id_mapping)
+	test_features, test_labels = load_train_data(test_file, cell2id_mapping, drug2id_mapping, zscore_method)
 
 	return (torch.Tensor(test_features), torch.Tensor(test_labels)), cell2id_mapping, drug2id_mapping
 
@@ -51,12 +66,12 @@ def load_mapping(mapping_file, mapping_type):
 	return mapping
 
 
-def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping):
+def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping, zscore_method):
 
-	train_features, train_labels = load_train_data(train_file, cell2id_mapping, drug2id_mapping)
+	train_features, train_labels = load_train_data(train_file, cell2id_mapping, drug2id_mapping, zscore_method)
 
 	if not val_file:
-		train_features, val_features, train_labels, val_labels = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = True)
+		train_features, val_features, train_labels, val_labels = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
 	else:
 		val_features, val_labels = load_train_data(val_file, cell2id_mapping, drug2id_mapping)
 

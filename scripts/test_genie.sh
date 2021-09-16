@@ -6,6 +6,7 @@ drug2idfile="${homedir}/data/GENIE/GENIE_all_drug2ind.txt"
 mutationfile="${homedir}/data/GENIE/GENIE_cell2mutation_${2}.txt"
 drugfile="${homedir}/data/GENIE/GENIE_all_drug2fingerprint.txt"
 testdatafile="${homedir}/data/GENIE/GENIE_all_test.txt"
+zscore_method=$3
 
 modelfile="${homedir}/model_${2}/model_final.pt"
 
@@ -29,4 +30,4 @@ source activate cuda11_env
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultfile \
-	-batchsize 20000 -predict $testdatafile -load $modelfile -cuda $cudaid > test.log
+	-batchsize 20000 -predict $testdatafile -zscore_method $zscore_method -load $modelfile -cuda $cudaid > test.log

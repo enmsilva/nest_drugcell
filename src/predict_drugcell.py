@@ -92,11 +92,12 @@ parser.add_argument('-result', help='Result file prefix', type=str, default='res
 parser.add_argument('-cuda', help='Specify GPU', type=int, default=0)
 parser.add_argument('-genotype', help='Mutation information for cell lines', type=str)
 parser.add_argument('-fingerprint', help='Morgan fingerprint representation for drugs', type=str)
+parser.add_argument('-zscore_method', help='zscore method (zscore/robustz)', type=str)
 
 opt = parser.parse_args()
 torch.set_printoptions(precision=5)
 
-predict_data, cell2id_mapping, drug2id_mapping = util.prepare_predict_data(opt.predict, opt.cell2id, opt.drug2id)
+predict_data, cell2id_mapping, drug2id_mapping = util.prepare_predict_data(opt.predict, opt.cell2id, opt.drug2id, opt.zscore_method)
 gene2id_mapping = util.load_mapping(opt.gene2id, "genes")
 
 # load cell/drug features

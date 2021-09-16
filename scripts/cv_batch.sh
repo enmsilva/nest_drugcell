@@ -7,5 +7,5 @@
 #SBATCH --mem=64G
 #SBATCH --dependency=singleton
 
-bash "${1}/scripts/cv_train.sh" $1 $2 $3
-bash "${1}/scripts/cv_test_gpu.sh" $1 $2 $3
+bash "${1}/scripts/cv_train.sh" $1 $2 $3 $4
+bash "${1}/scripts/cv_test.sh" $1 $2 $3 $4
