@@ -55,7 +55,10 @@ def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping):
 
 	train_features, train_labels = load_train_data(train_file, cell2id_mapping, drug2id_mapping)
 
-	val_features, val_labels = load_train_data(val_file, cell2id_mapping, drug2id_mapping)
+	if not val_file:
+		train_features, val_features, train_labels, val_labels = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = True)
+	else:
+		val_features, val_labels = load_train_data(val_file, cell2id_mapping, drug2id_mapping)
 
 	return (torch.Tensor(train_features), torch.FloatTensor(train_labels), torch.Tensor(val_features), torch.FloatTensor(val_labels))
 

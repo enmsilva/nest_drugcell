@@ -5,7 +5,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data as du
 from torch.autograd import Variable
-from sklearn.model_selection import train_test_split
 
 import util
 from training_data_wrapper import *
@@ -29,8 +28,7 @@ class NNTrainer():
 		epoch_start_time = time.time()
 		max_corr = 0
 
-		train_features, train_labels = self.data_wrapper.train_data
-		train_feature, val_feature, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
+		train_feature, val_feature, train_label, val_label = self.data_wrapper.train_data
 
 		term_mask_map = util.create_term_mask(self.model.term_direct_gene_map, self.model.gene_dim, self.data_wrapper.cuda)
 		for name, param in self.model.named_parameters():

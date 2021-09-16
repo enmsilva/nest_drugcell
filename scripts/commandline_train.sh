@@ -7,7 +7,7 @@ ontfile="${homedir}/data/ontology_${2}.txt"
 mutationfile="${homedir}/data/cell2mutation_${2}.txt"
 drugfile="${homedir}/data/drug2fingerprint_cg.txt"
 traindatafile="${homedir}/data/drugcell_train_cg.txt"
-valdatafile="${homedir}/data/drugcell_val_cg.txt"
+valdatafile="" # internal split
 
 modeldir="${homedir}/model_${2}"
 if [ -d $modeldir ]

@@ -43,8 +43,7 @@ class OptunaNNTrainer(NNTrainer):
 
 		self.setup_trials(trial)
 
-		train_features, train_labels = self.data_wrapper.train_data
-		train_feature, val_feature, train_label, val_label = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
+		train_feature, val_feature, train_label, val_label = self.data_wrapper.train_data
 
 		term_mask_map = util.create_term_mask(self.model.term_direct_gene_map, self.model.gene_dim, self.data_wrapper.cuda)
 		for name, param in self.model.named_parameters():
