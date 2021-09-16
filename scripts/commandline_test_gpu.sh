@@ -1,11 +1,11 @@
 #!/bin/bash
 homedir=$1
 gene2idfile="${homedir}/data/gene2ind_${2}.txt"
-cell2idfile="${homedir}/data/cell2ind.txt"
-drug2idfile="${homedir}/data/drug2ind.txt"
+cell2idfile="${homedir}/data/cell2ind_cg.txt"
+drug2idfile="${homedir}/data/drug2ind_cg.txt"
 mutationfile="${homedir}/data/cell2mutation_${2}.txt"
-drugfile="${homedir}/data/drug2fingerprint.txt"
-testdatafile="${homedir}/data/drugcell_all.txt"
+drugfile="${homedir}/data/drug2fingerprint_cg.txt"
+testdatafile="${homedir}/data/drugcell_all_cg.txt"
 
 modeldir="${homedir}/model_${2}"
 modelfile="${modeldir}/model_final.pt"
@@ -30,4 +30,4 @@ source activate cuda11_env
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultfile \
-	-batchsize 10000 -predict $testdatafile -load $modelfile -cuda $cudaid > "${modeldir}/test.log"
+	-batchsize 20000 -predict $testdatafile -load $modelfile -cuda $cudaid > "${modeldir}/test.log"

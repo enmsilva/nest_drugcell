@@ -6,8 +6,8 @@ strict_param=$1
 
 for ontology in cg
 do
-	for i in {1..5}
+	for i in 41
 	do
-		sbatch --job-name "NDC_${ontology}_${strict_param}" --output "out_${ontology}_${strict_param}.log" ${homedir}/scripts/strict_cv_batch.sh $homedir $ontology $i ${strict_param}
+		sbatch --job-name "NDC_${ontology}_${strict_param}_${i}" --output "out_${ontology}_${strict_param}_${i}.log" ${homedir}/scripts/strict_cv_batch.sh $homedir $ontology $i ${strict_param}
 	done
 done

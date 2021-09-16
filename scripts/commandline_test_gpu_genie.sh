@@ -3,7 +3,7 @@ homedir=$1
 gene2idfile="${homedir}/data/gene2ind_${2}.txt"
 cell2idfile="${homedir}/data/GENIE/GENIE_all_cell2ind.txt"
 drug2idfile="${homedir}/data/GENIE/GENIE_all_drug2ind.txt"
-mutationfile="${homedir}/data/GENIE/GENIE_all_cell2mutation.txt"
+mutationfile="${homedir}/data/GENIE/GENIE_cell2mutation_${2}.txt"
 drugfile="${homedir}/data/GENIE/GENIE_all_drug2fingerprint.txt"
 testdatafile="${homedir}/data/GENIE/GENIE_all_test.txt"
 
@@ -29,4 +29,4 @@ source activate cuda11_env
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultfile \
-	-batchsize 10000 -predict $testdatafile -load $modelfile -cuda $cudaid > test.log
+	-batchsize 20000 -predict $testdatafile -load $modelfile -cuda $cudaid > test.log

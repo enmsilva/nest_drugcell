@@ -30,4 +30,4 @@ source activate cuda11_env
 
 python -u $pyScript -gene2id $gene2idfile -cell2id $cell2idfile -drug2id $drug2idfile \
 	-genotype $mutationfile -fingerprint $drugfile -hidden $hiddendir -result $resultfile \
-	-predict $testdatafile -load $modelfile -cuda $cudaid > "${modeldir}/test.log"
+	-batchsize 20000 -predict $testdatafile -load $modelfile -cuda $cudaid > "${modeldir}/test.log"

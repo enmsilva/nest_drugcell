@@ -4,7 +4,7 @@
 #SBATCH --partition=nrnb-gpu
 #SBATCH --account=nrnb-gpu
 #SBATCH --gres=gpu:1
-#SBATCH --mem=128G
+#SBATCH --mem=64G
 #SBATCH --dependency=singleton
 
 bash "${1}/scripts/commandline_train.sh" $1 $2
