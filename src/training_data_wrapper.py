@@ -27,7 +27,7 @@ class TrainingDataWrapper():
 
 		self.load_ontology(args.onto)
 
-		self.train_data = util.prepare_train_data(args.train, args.test, self.cell_id_mapping, self.drug_id_mapping)
+		self.train_data = util.prepare_train_data(args.train, args.val, self.cell_id_mapping, self.drug_id_mapping)
 
 
 	def load_ontology(self, file_name):

@@ -51,14 +51,11 @@ def load_mapping(mapping_file, mapping_type):
 	return mapping
 
 
-def prepare_train_data(train_file, test_file, cell2id_mapping, drug2id_mapping):
+def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping):
 
 	train_features, train_labels = load_train_data(train_file, cell2id_mapping, drug2id_mapping)
 
-	val_features, val_labels = load_train_data(test_file, cell2id_mapping, drug2id_mapping)
-	val_size = len(train_labels) * 0.1 / len(val_labels)
-	if val_size < 1:
-		_, val_features, _, val_labels = train_test_split(val_features, val_labels, test_size=val_size, shuffle=True)
+	val_features, val_labels = load_train_data(val_file, cell2id_mapping, drug2id_mapping)
 
 	return (torch.Tensor(train_features), torch.FloatTensor(train_labels), torch.Tensor(val_features), torch.FloatTensor(val_labels))
 
