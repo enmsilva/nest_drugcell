@@ -22,6 +22,7 @@ def standardize_auc(data, zscore_method):
 		data[5] = data[2]
 
 	data.drop([2,3,4], axis=1, inplace=True)
+	data.columns = range(data.shape[1])
 	return data
 
 
