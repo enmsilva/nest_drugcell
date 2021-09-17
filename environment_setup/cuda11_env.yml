@@ -13,4 +13,5 @@ dependencies:
   - pytorch=1.8.0=py3.7_cuda11.1_cudnn8.0.5_0
   - scikit-learn
   - networkx
+  - pandas
 prefix: /cellar/users/asinghal/anaconda3/envs/cuda11_env
