@@ -18,7 +18,7 @@ def standardize_train_data(train_df, zscore_method, std_file):
 	std_file_out = open(std_file, "w")
 
 	if zscore_method == 'zscore':
-		train_df[5] = df.groupby([3,4])[2].transform(lambda x: scale(x))
+		train_df[5] = train_df.groupby([3,4])[2].transform(lambda x: scale(x))
 		for name, group in train_df.groupby([3,4])[2]:
 			std_file_out.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.mean(), group.std()))
 
