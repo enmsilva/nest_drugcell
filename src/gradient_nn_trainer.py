@@ -34,10 +34,10 @@ class GradientNNTrainer(NNTrainer):
 
 		train_label_gpu = Variable(train_label.cuda(self.data_wrapper.cuda))
 		val_label_gpu = Variable(val_label.cuda(self.data_wrapper.cuda))
-		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size = self.data_wrapper.batchsize, shuffle = False)
-		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size = self.data_wrapper.batchsize, shuffle = False)
+		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
+		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 
-		optimizer = torch.optim.Adam(self.model.parameters(), lr = self.data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
+		optimizer = torch.optim.Adam(self.model.parameters(), lr=self.data_wrapper.learning_rate, betas=(0.9, 0.99), eps=1e-05, weight_decay=0.01)
 		optimizer.zero_grad()
 
 		for epoch in range(self.data_wrapper.epochs):
@@ -61,7 +61,7 @@ class GradientNNTrainer(NNTrainer):
 				if train_predict.size()[0] == 0:
 					train_predict = aux_out_map['final'].data
 				else:
-					train_predict = torch.cat([train_predict, aux_out_map['final'].data], dim = 0)
+					train_predict = torch.cat([train_predict, aux_out_map['final'].data], dim=0)
 
 				total_loss = 0
 				for name, output in aux_out_map.items():
