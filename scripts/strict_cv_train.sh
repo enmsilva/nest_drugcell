@@ -17,6 +17,8 @@ then
 fi
 mkdir -p $modeldir
 
+stdfile="${modeldir}/std.txt"
+
 cudaid=0
 
 pyScript="${homedir}/src/train_drugcell.py"
@@ -25,5 +27,5 @@ source activate cuda11_env
 
 python -u $pyScript -onto $ontfile -gene2id $gene2idfile -drug2id $drug2idfile \
 	-cell2id $cell2idfile -train $traindatafile -val $valdatafile -genotype $mutationfile \
-	-fingerprint $drugfile -genotype_hiddens 6 -drug_hiddens '100,50,6' -final_hiddens 6 \
+	-std $stdfile -fingerprint $drugfile -genotype_hiddens 6 -drug_hiddens '100,50,6' -final_hiddens 6 \
 	-model $modeldir -cuda $cudaid -batchsize 20000 -epoch 300 -optimize 0 -zscore_method $zscore_method > "${modeldir}/train.log"
