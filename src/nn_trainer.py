@@ -40,10 +40,10 @@ class NNTrainer():
 
 		train_label_gpu = Variable(train_label.cuda(self.data_wrapper.cuda))
 		val_label_gpu = Variable(val_label.cuda(self.data_wrapper.cuda))
-		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size = self.data_wrapper.batchsize, shuffle = False)
-		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size = self.data_wrapper.batchsize, shuffle = False)
+		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
+		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 
-		optimizer = torch.optim.Adam(self.model.parameters(), lr = self.data_wrapper.learning_rate, betas = (0.9, 0.99), eps = 1e-05)
+		optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.learning_rate, betas=(0.9, 0.99), eps=1e-05)
 		optimizer.zero_grad()
 
 		self.term_feature_variance_map = {} # Map of term -> list of variance of every gene part of that term
@@ -67,7 +67,7 @@ class NNTrainer():
 				if train_predict.size()[0] == 0:
 					train_predict = aux_out_map['final'].data
 				else:
-					train_predict = torch.cat([train_predict, aux_out_map['final'].data], dim = 0)
+					train_predict = torch.cat([train_predict, aux_out_map['final'].data], dim=0)
 
 				total_loss = 0
 				for name, output in aux_out_map.items():
@@ -103,7 +103,7 @@ class NNTrainer():
 				if val_predict.size()[0] == 0:
 					val_predict = aux_out_map['final'].data
 				else:
-					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim = 0)
+					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim=0)
 
 			val_corr = util.pearson_corr(val_predict, val_label_gpu)
 
@@ -119,7 +119,7 @@ class NNTrainer():
 		self.finalize_variance()
 		variance_map, viann_score_map, viann_freq_map = self.calc_feature_importance(term_mask_map)
 		viann_score_map = {g:sc for g,sc in sorted(viann_score_map.items(), key=lambda item:item[1], reverse=True)}
-		mutations_per_gene = np.count_nonzero(self.data_wrapper.cell_features.transpose() == 1, axis=1)
+		mutations_per_gene = np.count_nonzero(self.data_wrapper.cell_features.transpose()==1, axis=1)
 		for g, score in viann_score_map.items():
 			mut_freq = mutations_per_gene[self.data_wrapper.gene_id_mapping[g]]
 			print("Gene {}\tMutations {:.0f}\tMean_Var {:.2e}\tMean_VIANN {:.2e}\tT_Var {:.2e}\tT_VIANN {:.2e}".format(g, mut_freq, variance_map[g]/viann_freq_map[g], score/viann_freq_map[g], variance_map[g], score))

@@ -37,7 +37,7 @@ class GradientNNTrainer(NNTrainer):
 		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 
-		optimizer = torch.optim.Adam(self.model.parameters(), lr=self.data_wrapper.learning_rate, betas=(0.9, 0.99), eps=1e-05, weight_decay=0.01)
+		optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.learning_rate, betas=(0.9, 0.99), eps=1e-05)
 		optimizer.zero_grad()
 
 		for epoch in range(self.data_wrapper.epochs):
@@ -97,7 +97,7 @@ class GradientNNTrainer(NNTrainer):
 				if val_predict.size()[0] == 0:
 					val_predict = aux_out_map['final'].data
 				else:
-					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim = 0)
+					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim=0)
 
 			val_corr = util.pearson_corr(val_predict, val_label_gpu)
 			if torch.isnan(val_corr):
