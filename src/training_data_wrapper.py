@@ -19,7 +19,7 @@ class TrainingDataWrapper():
 		self.num_hiddens_genotype = args.genotype_hiddens
 		self.num_hiddens_drug = list(map(int, args.drug_hiddens.split(',')))
 		self.num_hiddens_final = args.final_hiddens
-		self.learning_rate = args.lr
+		self.lr = args.lr
 		self.epochs = args.epoch
 		self.batchsize = args.batchsize
 		self.modeldir = args.modeldir
@@ -27,7 +27,7 @@ class TrainingDataWrapper():
 
 		self.load_ontology(args.onto)
 
-		self.train_data = util.prepare_train_data(args.train, args.val, self.cell_id_mapping, self.drug_id_mapping, args.zscore_method)
+		self.train_data = util.prepare_train_data(args.train, args.val, self.cell_id_mapping, self.drug_id_mapping, args.zscore_method, args.std)
 
 
 	def load_ontology(self, file_name):

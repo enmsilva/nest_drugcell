@@ -13,17 +13,28 @@ def pearson_corr(x, y):
 	return torch.sum(xx*yy) / (torch.norm(xx, 2)*torch.norm(yy,2))
 
 
-def standardize_auc(data, zscore_method):
-	if zscore_method == 'zscore':
-		data[5] = data.groupby([3,4])[2].transform(lambda x: scale(x))
-	elif zscore_method == 'robustz':
-		data[5] = data.groupby([3,4])[2].transform(lambda x: robust_scale(x))
-	else:
-		data[5] = data[2]
+def standardize_train_data(train_df, zscore_method, std_file_name):
 
-	data.drop([2,3,4], axis=1, inplace=True)
-	data.columns = range(data.shape[1])
-	return data
+	std_file = open(std_file_name, "w")
+
+	if zscore_method == 'zscore':
+		train_df[5] = df.groupby([3,4])[2].transform(lambda x: scale(x))
+		for name, group in train_df.groupby([3,4])[2]:
+			std_file.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.mean(), group.std()))
+
+	elif zscore_method == 'robustz':
+		train_df[5] = train_df.groupby([3,4])[2].transform(lambda x: robust_scale(x))
+		iqr = group.quantile(0.75) - group.quantile(0.25)
+		for name, group in train_df.groupby([3,4])[2]:
+			std_file.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.median(), iqr))
+	else:
+		train_df[5] = train_df[2]
+		for name, group in train_df.groupby([3,4])[2]:
+			std_file.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], 0, 1))
+
+	train_df.drop([2,3,4], axis=1, inplace=True)
+	train_df.columns = range(train_df.shape[1])
+	return train_df
 
 
 def load_train_data(file_name, cell2id, drug2id, zscore_method):
@@ -33,20 +44,58 @@ def load_train_data(file_name, cell2id, drug2id, zscore_method):
 	train_df = pd.read_csv(file_name, sep='\t', header=None)
 	train_df = standardize_auc(train_df, zscore_method)
 
-	for _,row in train_df.iterrows():
+	for row in train_df.values:
+		feature.append([cell2id[row[0]], drug2id[row[1]]])
+		label.append([float(row[2])])
+
+	return feature, label, train_df
+
+
+def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file):
+
+	train_features, train_labels, train_df = load_train_data(train_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file)
+
+	val_features, val_labels = load_pred_data(val_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file)
+
+	return (torch.Tensor(train_features), torch.FloatTensor(train_labels), torch.Tensor(val_features), torch.FloatTensor(val_labels))
+
+
+def standardize_test_data(test_df, zscore_method, std_file_name):
+
+	std_file_df = pd.read_csv(std_file_name, sep='\t', header=None)
+
+	merged = pd.merge(test_df, std_file_df, how="left", left_on=[3, 4], right_on=[0, 1], sort=False)
+	merged = merged[["0_x", "1_x", "2_x", "2_y", "3_y"]]
+	merged.columns = range(merged.shape[1])
+
+	n = merged.shape[1]
+	merged[n] = (merged[2] - merged[n-2]) / merged[n-1]
+	merged = merged[[0, 1, n-1]]
+	merged.columns = range(merged.shape[1])
+	return merged
+
+
+def load_pred_data(file_name, cell2id, drug2id, zscore_method, std_file_name):
+	feature = []
+	label = []
+
+	test_df = pd.read_csv(file_name, sep='\t', header=None)
+	test_df = standardize_test_data(test_df, zscore_method, std_file_name)
+
+	for row in test_df.values:
 		feature.append([cell2id[row[0]], drug2id[row[1]]])
 		label.append([float(row[2])])
 
 	return feature, label
 
 
-def prepare_predict_data(test_file, cell2id_mapping_file, drug2id_mapping_file, zscore_method):
+def prepare_predict_data(test_file, cell2id_mapping_file, drug2id_mapping_file, zscore_method, std_file):
 
 	# load mapping files
 	cell2id_mapping = load_mapping(cell2id_mapping_file, 'cell lines')
 	drug2id_mapping = load_mapping(drug2id_mapping_file, 'drugs')
 
-	test_features, test_labels = load_train_data(test_file, cell2id_mapping, drug2id_mapping, zscore_method)
+	test_features, test_labels = load_pred_data(test_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file)
 
 	return (torch.Tensor(test_features), torch.Tensor(test_labels)), cell2id_mapping, drug2id_mapping
 
@@ -65,18 +114,6 @@ def load_mapping(mapping_file, mapping_type):
 	print('Total number of {} = {}'.format(mapping_type, len(mapping)))
 
 	return mapping
-
-
-def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping, zscore_method):
-
-	train_features, train_labels = load_train_data(train_file, cell2id_mapping, drug2id_mapping, zscore_method)
-
-	if not val_file:
-		train_features, val_features, train_labels, val_labels = train_test_split(train_features, train_labels, test_size = 0.1, shuffle = False)
-	else:
-		val_features, val_labels = load_train_data(val_file, cell2id_mapping, drug2id_mapping)
-
-	return (torch.Tensor(train_features), torch.FloatTensor(train_labels), torch.Tensor(val_features), torch.FloatTensor(val_labels))
 
 
 def build_input_vector(input_data, cell_features, drug_features):

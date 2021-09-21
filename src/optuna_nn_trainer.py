@@ -29,7 +29,7 @@ class OptunaNNTrainer(NNTrainer):
 	def setup_trials(self, trial):
 
 		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 4, 6, 8, 10, 12])
-		#self.data_wrapper.learning_rate = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
+		#self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
 		#self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4])
 
 		for key, value in trial.params.items():
@@ -58,7 +58,7 @@ class OptunaNNTrainer(NNTrainer):
 		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 
-		optimizer = torch.optim.Adam(self.model.parameters(), lr=self.data_wrapper.learning_rate, betas=(0.9, 0.99), eps=1e-05)
+		optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.lr, betas=(0.9, 0.99), eps=1e-05, weight_decay=self.data_wrapper.wd)
 		optimizer.zero_grad()
 
 		for epoch in range(self.data_wrapper.epochs):

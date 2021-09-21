@@ -13,7 +13,7 @@ def main():
 	parser = argparse.ArgumentParser(description = 'Train DrugCell')
 	parser.add_argument('-onto', help = 'Ontology file used to guide the neural network', type = str)
 	parser.add_argument('-train', help = 'Training dataset', type = str)
-	parser.add_argument('-val', help = 'Validation dataset', type = str, default = "")
+	parser.add_argument('-val', help = 'Validation dataset', type = str)
 	parser.add_argument('-epoch', help = 'Training epochs for training', type = int, default = 300)
 	parser.add_argument('-lr', help = 'Learning rate', type = float, default = 0.001)
 	parser.add_argument('-batchsize', help = 'Batchsize', type = int, default = 5000)
@@ -29,6 +29,7 @@ def main():
 	parser.add_argument('-fingerprint', help = 'Morgan fingerprint representation for drugs', type = str)
 	parser.add_argument('-optimize', help = 'Hyper-parameter optimization', type = int, default = 0)
 	parser.add_argument('-zscore_method', help='zscore method (zscore/robustz)', type=str)
+	parser.add_argument('-std', help = 'Standardization File', type = str)
 
 	opt = parser.parse_args()
 
