@@ -24,13 +24,13 @@ def standardize_train_data(train_df, zscore_method, std_file):
 
 	elif zscore_method == 'robustz':
 		train_df[5] = train_df.groupby([3,4])[2].transform(lambda x: robust_scale(x))
-		iqr = group.quantile(0.75) - group.quantile(0.25)
 		for name, group in train_df.groupby([3,4])[2]:
+			iqr = group.quantile(0.75) - group.quantile(0.25)
 			std_file_out.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.median(), iqr))
 	else:
 		train_df[5] = train_df[2]
 		for name, group in train_df.groupby([3,4])[2]:
-			std_file_out.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], 0, 1))
+			std_file_out.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], 0.0, 1.0))
 
 	std_file_out.close()
 
@@ -68,11 +68,8 @@ def standardize_test_data(test_df, zscore_method, std_file):
 
 	merged = pd.merge(test_df, std_file_df, how="left", left_on=[3, 4], right_on=[0, 1], sort=False)
 	merged = merged[["0_x", "1_x", "2_x", "2_y", "3_y"]]
-	merged.columns = range(merged.shape[1])
-
-	n = merged.shape[1]
-	merged[n] = (merged[2] - merged[n-2]) / merged[n-1]
-	merged = merged[[0, 1, n-1]]
+	merged["z"] = (merged["2_x"] - merged["2_y"]) / merged["3_y"]
+	merged = merged[["0_x", "1_x", "z"]]
 	merged.columns = range(merged.shape[1])
 	return merged
 
