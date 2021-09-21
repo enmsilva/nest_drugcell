@@ -13,56 +13,58 @@ def pearson_corr(x, y):
 	return torch.sum(xx*yy) / (torch.norm(xx, 2)*torch.norm(yy,2))
 
 
-def standardize_train_data(train_df, zscore_method, std_file_name):
+def standardize_train_data(train_df, zscore_method, std_file):
 
-	std_file = open(std_file_name, "w")
+	std_file_out = open(std_file, "w")
 
 	if zscore_method == 'zscore':
 		train_df[5] = df.groupby([3,4])[2].transform(lambda x: scale(x))
 		for name, group in train_df.groupby([3,4])[2]:
-			std_file.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.mean(), group.std()))
+			std_file_out.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.mean(), group.std()))
 
 	elif zscore_method == 'robustz':
 		train_df[5] = train_df.groupby([3,4])[2].transform(lambda x: robust_scale(x))
 		iqr = group.quantile(0.75) - group.quantile(0.25)
 		for name, group in train_df.groupby([3,4])[2]:
-			std_file.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.median(), iqr))
+			std_file_out.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], group.median(), iqr))
 	else:
 		train_df[5] = train_df[2]
 		for name, group in train_df.groupby([3,4])[2]:
-			std_file.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], 0, 1))
+			std_file_out.write("{}\t{}\t{}\t{}\n".format(name[0], name[1], 0, 1))
+
+	std_file_out.close()
 
 	train_df.drop([2,3,4], axis=1, inplace=True)
 	train_df.columns = range(train_df.shape[1])
 	return train_df
 
 
-def load_train_data(file_name, cell2id, drug2id, zscore_method):
+def load_train_data(file_name, cell2id, drug2id, zscore_method, std_file):
 	feature = []
 	label = []
 
 	train_df = pd.read_csv(file_name, sep='\t', header=None)
-	train_df = standardize_auc(train_df, zscore_method)
+	train_df = standardize_train_data(train_df, zscore_method, std_file)
 
 	for row in train_df.values:
 		feature.append([cell2id[row[0]], drug2id[row[1]]])
 		label.append([float(row[2])])
 
-	return feature, label, train_df
+	return feature, label
 
 
 def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file):
 
-	train_features, train_labels, train_df = load_train_data(train_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file)
+	train_features, train_labels = load_train_data(train_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file)
 
 	val_features, val_labels = load_pred_data(val_file, cell2id_mapping, drug2id_mapping, zscore_method, std_file)
 
 	return (torch.Tensor(train_features), torch.FloatTensor(train_labels), torch.Tensor(val_features), torch.FloatTensor(val_labels))
 
 
-def standardize_test_data(test_df, zscore_method, std_file_name):
+def standardize_test_data(test_df, zscore_method, std_file):
 
-	std_file_df = pd.read_csv(std_file_name, sep='\t', header=None)
+	std_file_df = pd.read_csv(std_file, sep='\t', header=None)
 
 	merged = pd.merge(test_df, std_file_df, how="left", left_on=[3, 4], right_on=[0, 1], sort=False)
 	merged = merged[["0_x", "1_x", "2_x", "2_y", "3_y"]]
@@ -75,12 +77,12 @@ def standardize_test_data(test_df, zscore_method, std_file_name):
 	return merged
 
 
-def load_pred_data(file_name, cell2id, drug2id, zscore_method, std_file_name):
+def load_pred_data(file_name, cell2id, drug2id, zscore_method, std_file):
 	feature = []
 	label = []
 
 	test_df = pd.read_csv(file_name, sep='\t', header=None)
-	test_df = standardize_test_data(test_df, zscore_method, std_file_name)
+	test_df = standardize_test_data(test_df, zscore_method, std_file)
 
 	for row in test_df.values:
 		feature.append([cell2id[row[0]], drug2id[row[1]]])
