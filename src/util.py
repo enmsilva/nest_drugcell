@@ -64,6 +64,9 @@ def prepare_train_data(train_file, val_file, cell2id_mapping, drug2id_mapping, z
 
 def standardize_test_data(test_df, zscore_method, std_file):
 
+	if zscore_method != 'zscore' and zscore_method != 'robustz':
+		return test_df
+
 	std_file_df = pd.read_csv(std_file, sep='\t', header=None)
 
 	merged = pd.merge(test_df, std_file_df, how="left", left_on=[3, 4], right_on=[0, 1], sort=False)
