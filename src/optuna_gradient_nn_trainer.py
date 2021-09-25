@@ -32,7 +32,8 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
 		self.data_wrapper.wd = trial.suggest_float("weight_decay", 1e-5, 1e-1, log=True)
 		self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-		self.data_wrapper.epochs = trial.suggest_int("epochs", 50, 300)
+		self.data_wrapper.epochs = trial.suggest_int("epochs", 150, 300)
+		self.data_wrapper.zscore_method = trial.suggest_categorical("zscore_method", ["zscore", "robustz"])
 
 		for key, value in trial.params.items():
 			print("{}: {}".format(key, value))
