@@ -37,8 +37,7 @@ class GradientNNTrainer(NNTrainer):
 		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
 
-		#optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.lr, betas=(0.9, 0.99), eps=1e-05, weight_decay=self.data_wrapper.wd)
-		optimizer = torch.optim.SGD(self.model.parameters(), lr=self.data_wrapper.lr, momentum=0.9, weight_decay=self.data_wrapper.wd)
+		optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.lr, betas=(0.9, 0.99), eps=1e-05, weight_decay=self.data_wrapper.wd)
 		optimizer.zero_grad()
 
 		for epoch in range(self.data_wrapper.epochs):
