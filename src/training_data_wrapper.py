@@ -25,10 +25,15 @@ class TrainingDataWrapper():
 		self.batchsize = args.batchsize
 		self.modeldir = args.modeldir
 		self.cuda = args.cuda
-
+		self.train = args.train
+		self.val = args.val
+		self.zscore_method = args.zscore_method
+		self.std = args.std
 		self.load_ontology(args.onto)
 
-		self.train_data = util.prepare_train_data(args.train, args.val, self.cell_id_mapping, self.drug_id_mapping, args.zscore_method, args.std)
+
+	def prepare_train_data():
+		return util.prepare_train_data(self.train, self.val, self.cell_id_mapping, self.drug_id_mapping, self.zscore_method, self.std)
 
 
 	def load_ontology(self, file_name):

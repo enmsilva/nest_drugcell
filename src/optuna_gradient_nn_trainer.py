@@ -32,7 +32,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
 		self.data_wrapper.wd = trial.suggest_float("weight_decay", 1e-5, 1e-1, log=True)
 		self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-		self.data_wrapper.epochs = trial.suggest_int("epochs", 150, 300)
+		self.data_wrapper.epochs = trial.suggest_int("epochs", 50, 200)
 		self.data_wrapper.zscore_method = trial.suggest_categorical("zscore_method", ["zscore", "robustz"])
 
 		for key, value in trial.params.items():
@@ -46,7 +46,7 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 
 		self.setup_trials(trial)
 
-		train_feature, train_label, val_feature, val_label = self.data_wrapper.train_data
+		train_feature, train_label, val_feature, val_label = self.data_wrapper.prepare_train_data()
 
 		term_mask_map = util.create_term_mask(self.model.term_direct_gene_map, self.model.gene_dim, self.data_wrapper.cuda)
 		for name, param in self.model.named_parameters():
