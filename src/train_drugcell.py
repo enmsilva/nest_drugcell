@@ -35,9 +35,16 @@ def main():
 	opt = parser.parse_args()
 
 	if opt.optimize == 0:
+		NNTrainer(opt).train_model()
+	elif opt.optimize == 1:
 		GradientNNTrainer(opt).train_model()
-	else:
+	elif opt.optimize == 2:
+		OptunaNNTrainer(opt).exec_study()
+	elif opt.optimize == 3:
 		OptunaGradientNNTrainer(opt).exec_study()
+	else:
+		print("Wrong value for optimize.")
+		exit(1)
 
 
 if __name__ == "__main__":

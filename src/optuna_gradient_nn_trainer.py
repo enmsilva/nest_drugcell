@@ -22,15 +22,17 @@ class OptunaGradientNNTrainer(GradientNNTrainer):
 
 	def exec_study(self):
 		study = optuna.create_study(directions=["minimize", "maximize"])
-		study.optimize(self.train_model, n_trials=10)
+		study.optimize(self.train_model, n_trials=100)
 		self.print_result(study)
 
 
 	def setup_trials(self, trial):
 
-		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 4, 6, 8])
-		#self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 1e-3, log=True)
-		#self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4])
+		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 3, 4, 5, 6, 8, 10])
+		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+		self.data_wrapper.wd = trial.suggest_float("weight_decay", 1e-5, 1e-1, log=True)
+		self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+		self.data_wrapper.epochs = trial.suggest_int("epochs", 50, 300)
 
 		for key, value in trial.params.items():
 			print("{}: {}".format(key, value))
