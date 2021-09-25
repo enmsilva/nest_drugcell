@@ -32,7 +32,7 @@ class TrainingDataWrapper():
 		self.load_ontology(args.onto)
 
 
-	def prepare_train_data():
+	def prepare_train_data(self):
 		return util.prepare_train_data(self.train, self.val, self.cell_id_mapping, self.drug_id_mapping, self.zscore_method, self.std)
 
 
