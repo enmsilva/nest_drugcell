@@ -28,7 +28,7 @@ class NNTrainer():
 		epoch_start_time = time.time()
 		max_corr = 0
 
-		train_feature, val_feature, train_label, val_label = self.data_wrapper.train_data
+		train_feature, train_label, val_feature, val_label = self.data_wrapper.train_data
 
 		term_mask_map = util.create_term_mask(self.model.term_direct_gene_map, self.model.gene_dim, self.data_wrapper.cuda)
 		for name, param in self.model.named_parameters():
