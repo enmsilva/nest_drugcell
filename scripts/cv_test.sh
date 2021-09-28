@@ -5,18 +5,15 @@ cell2idfile="${homedir}/data/cell2ind_cg.txt"
 drug2idfile="${homedir}/data/drug2ind_cg.txt"
 mutationfile="${homedir}/data/cell2mutation_${2}.txt"
 drugfile="${homedir}/data/drug2fingerprint_cg.txt"
-testdatafile="${homedir}/data/${3}_drugcell_test_cg.txt"
+testdatafile="${homedir}/data/${3}_test_cg.txt"
 zscore_method=$4
 
-modeldir="${homedir}/model_${2}_${3}"
+modeldir="${homedir}/model_${2}_${3}_${4}"
 modelfile="${modeldir}/model_final.pt"
 
 stdfile="${modeldir}/std.txt"
 
-resultdir="${homedir}/result"
-mkdir -p $resultdir
-
-resultfile="${resultdir}/${3}_predict_${2}"
+resultfile="${modeldir}/predict"
 
 hiddendir="${modeldir}/hidden"
 if [ -d $hiddendir ]

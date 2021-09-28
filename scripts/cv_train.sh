@@ -6,11 +6,11 @@ drug2idfile="${homedir}/data/drug2ind_cg.txt"
 ontfile="${homedir}/data/ontology_${2}.txt"
 mutationfile="${homedir}/data/cell2mutation_${2}.txt"
 drugfile="${homedir}/data/drug2fingerprint_cg.txt"
-traindatafile="${homedir}/data/${3}_drugcell_train_cg.txt"
-valdatafile="${homedir}/data/${3}_drugcell_val_cg.txt"
+traindatafile="${homedir}/data/${3}_train_cg.txt"
+valdatafile="${homedir}/data/${3}_test_cg.txt"
 zscore_method=$4
 
-modeldir="${homedir}/model_${2}_${3}"
+modeldir="${homedir}/model_${2}_${3}_${4}"
 if [ -d $modeldir ]
 then
 	rm -rf $modeldir
@@ -26,6 +26,6 @@ pyScript="${homedir}/src/train_drugcell.py"
 source activate cuda11_env
 
 python -u $pyScript -onto $ontfile -gene2id $gene2idfile -drug2id $drug2idfile \
-	-cell2id $cell2idfile -train $traindatafile -val $valdatafile -genotype $mutationfile \
-	-std $stdfile -fingerprint $drugfile -genotype_hiddens 6 -drug_hiddens '100,50,6' -final_hiddens 6  \
-	-model $modeldir -cuda $cudaid -batchsize 20000 -epoch 300 -optimize 0 -zscore_method=$zscore_method > "${modeldir}/train.log"
+	-cell2id $cell2idfile -train $traindatafile -val $valdatafile -genotype $mutationfile -std $stdfile \
+	-fingerprint $drugfile -genotype_hiddens 8 -drug_hiddens '100,50,6' -final_hiddens 6 -lr 0.008 -wd 0.005 -alpha 0.2 \
+	-model $modeldir -cuda $cudaid -batchsize 20000 -epoch 150 -optimize 1 -zscore_method $zscore_method > "${modeldir}/train.log"

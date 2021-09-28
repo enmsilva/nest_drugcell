@@ -13,10 +13,7 @@ modelfile="${modeldir}/model_final.pt"
 
 stdfile="${modeldir}/std.txt"
 
-resultdir="${homedir}/result"
-mkdir -p $resultdir
-
-resultfile="${resultdir}/predict_all_${2}"
+resultfile="${modeldir}/predict"
 
 hiddendir="${modeldir}/hidden"
 if [ -d $hiddendir ]

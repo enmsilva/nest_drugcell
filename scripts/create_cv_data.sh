@@ -2,8 +2,8 @@
 
 homedir="/cellar/users/asinghal/Workspace/nest_drugcell"
 dataFile="${homedir}/data/drugcell_all_cg.txt"
-trainFile="drugcell_train_cg.txt"
-testFile="drugcell_test_cg.txt"
+trainFile="train_cg.txt"
+testFile="test_cg.txt"
 
 lc=`cat $dataFile | wc -l`
 
