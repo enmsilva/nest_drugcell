@@ -1,5 +1,6 @@
 import torch
 from torch._six import inf
+import math
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -21,7 +22,7 @@ def calc_std_vals(df, zscore_method):
 		for name, group in df.groupby(['dataset', 'drug'])['auc']:
 			center = group.mean()
 			scale = group.std()
-			if scale == 0.0:
+			if math.isnan(scale) or scale == 0.0:
 				scale = 1.0
 			temp = pd.DataFrame([[name[0], name[1], center, scale]], columns=std_df.columns)
 			std_list.append(temp)
@@ -30,7 +31,7 @@ def calc_std_vals(df, zscore_method):
 		for name, group in df.groupby(['dataset', 'drug'])['auc']:
 			center = group.median()
 			scale = group.quantile(0.75) - group.quantile(0.25)
-			if scale == 0.0:
+			if math.isnan(scale) or scale == 0.0:
 				scale = 1.0
 			temp = pd.DataFrame([[name[0], name[1], center, scale]], columns=std_df.columns)
 			std_list.append(temp)
@@ -73,7 +74,7 @@ def load_pred_data(test_file, cell2id, drug2id, zscore_method, train_std_file):
 	test_std_df = calc_std_vals(test_df, zscore_method)
 	for i, row in test_std_df.iterrows():
 		dataset = row['dataset']
-		drug = row['drug']
+		drug = str(row['drug'])
 		train_entry = train_std_df.query('dataset == @dataset and drug == @drug')
 		if not train_entry.empty:
 			test_std_df.loc[i, 'center'] = float(train_entry['center'])
