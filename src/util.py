@@ -39,7 +39,7 @@ def calc_std_vals(df, zscore_method):
 			temp = pd.DataFrame([[name[0], name[1], 0.0, 1.0]], columns=std_df.columns)
 			std_list.append(temp)
 
-	std_df.concat(std_list, ignore_index=True)
+	std_df = pd.concat(std_list, ignore_index=True)
 	return std_df
 
 
