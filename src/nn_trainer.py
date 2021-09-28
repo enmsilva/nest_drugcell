@@ -14,13 +14,9 @@ from drugcell_nn import *
 class NNTrainer():
 
 	def __init__(self, opt):
-
 		self.data_wrapper = TrainingDataWrapper(opt)
-
 		self.model = DrugCellNN(self.data_wrapper)
 		self.model.cuda(self.data_wrapper.cuda)
-
-		self.alpha = 0.2
 
 
 	def train_model(self):
@@ -75,7 +71,7 @@ class NNTrainer():
 					if name == 'final':
 						total_loss += loss(output, cuda_labels)
 					else:
-						total_loss += self.alpha * loss(output, cuda_labels)
+						total_loss += self.data_wrapper.alpha * loss(output, cuda_labels)
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():

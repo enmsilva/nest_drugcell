@@ -21,6 +21,7 @@ class TrainingDataWrapper():
 		self.num_hiddens_final = args.final_hiddens
 		self.lr = args.lr
 		self.wd = args.wd
+		self.alpha = args.alpha
 		self.epochs = args.epoch
 		self.batchsize = args.batchsize
 		self.modeldir = args.modeldir

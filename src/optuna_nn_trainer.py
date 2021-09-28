@@ -31,9 +31,9 @@ class OptunaNNTrainer(NNTrainer):
 		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 3, 4, 5, 6, 8])
 		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
 		self.data_wrapper.wd = trial.suggest_float("weight_decay", 1e-5, 1e-2, log=True)
-		self.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4, 0.5, 0.8, 1.0])
+		self.data_wrapper.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4, 0.5, 0.8, 1.0])
 		self.data_wrapper.epochs = trial.suggest_int("epochs", 50, 200)
-		self.data_wrapper.zscore_method = trial.suggest_categorical("zscore_method", ["zscore", "robustz"])
+		self.data_wrapper.zscore_method = trial.suggest_categorical("zscore_method", ["zscore", "robustz", "none"])
 
 		for key, value in trial.params.items():
 			print("{}: {}".format(key, value))
@@ -92,7 +92,7 @@ class OptunaNNTrainer(NNTrainer):
 					if name == 'final':
 						total_loss += loss(output, cuda_labels)
 					else:
-						total_loss += self.alpha * loss(output, cuda_labels)
+						total_loss += self.data_wrapper.alpha * loss(output, cuda_labels)
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():

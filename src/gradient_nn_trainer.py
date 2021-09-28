@@ -69,7 +69,7 @@ class GradientNNTrainer(NNTrainer):
 					if name == 'final':
 						total_loss += loss(output, cuda_labels)
 					else:
-						total_loss += self.alpha * loss(output, cuda_labels)
+						total_loss += self.data_wrapper.alpha * loss(output, cuda_labels)
 				total_loss.backward()
 
 				for name, param in self.model.named_parameters():
