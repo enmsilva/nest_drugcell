@@ -105,12 +105,12 @@ class NNTrainer():
 
 			if val_corr >= max_corr:
 				max_corr = val_corr
-				print("Model saved at epoch {}".format(epoch))
-				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 			epoch_end_time = time.time()
 			print("epoch {}\ttrain_corr {:.3f}\tval_corr {:.3f}\ttotal_loss {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
+
+		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 		self.finalize_variance()
 		variance_map, viann_score_map, viann_freq_map = self.calc_feature_importance(term_mask_map)
