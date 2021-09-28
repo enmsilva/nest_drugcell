@@ -45,7 +45,7 @@ def calc_std_vals(df, zscore_method):
 
 def standardize_data(df, std_df):
 	merged = pd.merge(df, std_df, how="left", on=['dataset', 'drug'], sort=False)
-	merged['z'] = (merged['auc'] - merged['center']) / merge['scale']
+	merged['z'] = (merged['auc'] - merged['center']) / merged['scale']
 	merged = merged[['cell_line', 'smiles', 'z']]
 	return merged
 
