@@ -32,7 +32,6 @@ class OptunaNNTrainer(NNTrainer):
 		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 5e-1, log=True)
 		self.data_wrapper.wd = trial.suggest_float("weight_decay", 1e-6, 5e-1, log=True)
 		self.data_wrapper.alpha = trial.suggest_categorical("alpha", [0.2, 0.5, 0.8, 1.0])
-		self.data_wrapper.epochs = trial.suggest_categorical("epochs", [25, 50, 100, 150, 200])
 
 		for key, value in trial.params.items():
 			print("{}: {}".format(key, value))
