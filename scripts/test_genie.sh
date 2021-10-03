@@ -8,7 +8,7 @@ drugfile="${homedir}/data/GENIE/GENIE_all_drug2fingerprint.txt"
 testdatafile="${homedir}/data/GENIE/GENIE_test_zscore.txt"
 zscore_method=$3
 
-modeldir="${homedir}/model_${2}"
+modeldir="${homedir}/model_${2}_${4}_${3}_${5}"
 modelfile="${modeldir}/model_final.pt"
 
 stdfile="${modeldir}/std.txt"

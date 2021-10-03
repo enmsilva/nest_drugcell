@@ -8,4 +8,4 @@
 #SBATCH --dependency=singleton
 
 bash "${1}/scripts/train.sh" $1 $2 $3
-#bash "${1}/scripts/test.sh" $1 $2 $3
+bash "${1}/scripts/test_genie.sh" $1 $2 $3

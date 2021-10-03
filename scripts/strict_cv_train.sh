@@ -27,5 +27,5 @@ source activate cuda11_env
 
 python -u $pyScript -onto $ontfile -gene2id $gene2idfile -drug2id $drug2idfile \
 	-cell2id $cell2idfile -train $traindatafile -val $valdatafile -genotype $mutationfile -std $stdfile \
-	-fingerprint $drugfile -genotype_hiddens 8 -drug_hiddens '100,50,6' -final_hiddens 6 -lr 0.05 -wd 0.0005 -alpha 0.5 \
-	-model $modeldir -cuda $cudaid -batchsize 20000 -epoch 150 -optimize 1 -zscore_method $zscore_method > "${modeldir}/train.log"
+	-fingerprint $drugfile -genotype_hiddens 8 -drug_hiddens '100,50,6' -final_hiddens 6 -lr 0.00001 -wd 0.000001 -alpha 0.5 \
+	-model $modeldir -cuda $cudaid -batchsize 20000 -epoch 100 -optimize 1 -zscore_method $zscore_method > "${modeldir}/train.log"

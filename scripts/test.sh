@@ -8,7 +8,7 @@ drugfile="${homedir}/data/drug2fingerprint_cg.txt"
 testdatafile="${homedir}/data/drugcell_test_cg.txt"
 zscore_method=$3
 
-modeldir="${homedir}/model_${2}"
+modeldir="${homedir}/model_${2}_${3}"
 modelfile="${modeldir}/model_final.pt"
 
 stdfile="${modeldir}/std.txt"
