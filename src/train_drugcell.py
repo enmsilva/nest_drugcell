@@ -3,7 +3,6 @@ import argparse
 from nn_trainer import *
 from optuna_nn_trainer import *
 from gradient_nn_trainer import *
-from optuna_gradient_nn_trainer import *
 
 
 def main():
