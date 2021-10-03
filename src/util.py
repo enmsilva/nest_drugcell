@@ -14,24 +14,18 @@ def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 	labels = torch_labels.cpu().numpy()
 	inputdata = torch_inputdata.cpu().numpy()
 
-	if np.all(labels == labels[0]):
-		return 0.0
-
 	drugs = set([int(data[1]) for data in inputdata])
 
 	pos_map = {d:[] for d in drugs}
 	for i, data in enumerate(inputdata):
 		pos_map[data[1]].append(i)
 
-	corr_list = [0.0] * len(drugs)
+	corr_list = [] * len(drugs)
 	for i, drug in enumerate(drugs):
 		index = pos_map[drug]
 		x = np.take(pred, index)
 		y = np.take(labels, index)
-		if np.all(x == x[0]):
-			corr = 0.0
-		else:
-			corr = stats.spearmanr(x, y)[0]
+		corr = stats.spearmanr(x, y)[0]
 		corr_list[i] = corr
 
 	return np.median(corr_list)
