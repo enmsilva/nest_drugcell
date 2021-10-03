@@ -23,7 +23,6 @@ def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 	for i, data in enumerate(inputdata):
 		pos_map[data[1]].append(i)
 
-	print(pos_map)
 	corr_list = [0.0] * len(drugs)
 	for i, drug in enumerate(drugs):
 		index = pos_map[drug]
@@ -35,7 +34,6 @@ def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 			corr = stats.spearmanr(x, y)[0]
 		corr_list[i] = corr
 
-	print(corr_list)
 	return np.median(corr_list)
 
 
@@ -72,7 +70,7 @@ def calc_std_vals(df, zscore_method):
 def standardize_data(df, std_df):
 	merged = pd.merge(df, std_df, how="left", on=['dataset', 'drug'], sort=False)
 	merged['z'] = (merged['auc'] - merged['center']) / merged['scale']
-	merged = merged[['cell_line', 'smiles', 'z']]
+	merged = merged[['cell_line', 'smiles', 'z', 'dataset', 'drug']]
 	return merged
 
 
