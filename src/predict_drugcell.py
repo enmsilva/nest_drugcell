@@ -25,7 +25,7 @@ def predict_drugcell(predict_data, gene_dim, drug_dim, model_file, hidden_folder
 	model.cuda(CUDA_ID)
 	model.eval()
 
-	test_loader = du.DataLoader(du.TensorDataset(predict_feature,predict_label), batch_size=batch_size, shuffle=False)
+	test_loader = du.DataLoader(du.TensorDataset(predict_feature, predict_label), batch_size=batch_size, shuffle=False)
 
 	#Test
 	test_predict = torch.zeros(0,0).cuda(CUDA_ID)
@@ -74,8 +74,8 @@ def predict_drugcell(predict_data, gene_dim, drug_dim, model_file, hidden_folder
 			with open(hidden_file, 'ab') as f:
 				np.savetxt(f, hidden_grad.data.cpu().numpy(), '%.4e', delimiter='\t')
 
-	test_corr = util.get_drug_corr_median(test_predict, predict_label_gpu, inputdata)
-	print("Test pearson corr\t%s\t%.6f" % (model.root, test_corr))
+	test_corr = util.get_drug_corr_median(test_predict, predict_label_gpu, predict_feature)
+	print("Test median drug correlation\t%s\t%.6f" % (model.root, test_corr))
 
 	np.savetxt(result_file + '.txt', test_predict.cpu().numpy(),'%.4e')
 

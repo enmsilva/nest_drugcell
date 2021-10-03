@@ -17,7 +17,7 @@ def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 	if np.all(labels == labels[0]):
 		return 0.0
 
-	drugs = set([data[1] for data in inputdata])
+	drugs = set([int(data[1]) for data in inputdata])
 
 	pos_map = {d:[] for d in drugs}
 	for i, data in enumerate(inputdata):
