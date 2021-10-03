@@ -10,9 +10,9 @@ from scipy import stats
 
 def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 
-	pred = torch_pred.numpy()
-	labels = torch_labels.numpy()
-	inputdata = torch_inputdata.numpy()
+	pred = torch_pred.cpu().numpy()
+	labels = torch_labels.cpu().numpy()
+	inputdata = torch_inputdata.cpu().numpy()
 
 	if np.all(labels == labels[0]):
 		return 0.0
