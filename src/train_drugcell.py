@@ -41,8 +41,6 @@ def main():
 		GradientNNTrainer(opt).train_model()
 	elif opt.optimize == 2:
 		OptunaNNTrainer(opt).exec_study()
-	elif opt.optimize == 3:
-		OptunaGradientNNTrainer(opt).exec_study()
 	else:
 		print("Wrong value for optimize.")
 		exit(1)

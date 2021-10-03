@@ -6,12 +6,35 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import robust_scale
 from sklearn.preprocessing import scale
+from scipy import stats
 
-def pearson_corr(x, y):
-	xx = x - torch.mean(x)
-	yy = y - torch.mean(y)
+def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 
-	return torch.sum(xx*yy) / (torch.norm(xx, 2)*torch.norm(yy,2))
+	pred = torch_pred.numpy()
+	labels = torch_labels.numpy()
+	inputdata = torch_inputdata.numpy()
+
+	if np.all(labels == labels[0]):
+		return 0.0
+
+	drugs = set([data[1] for data in inputdata])
+
+	pos_map = {d:[] for d in drugs}
+	for i, data in enumerate(inputdata):
+		pos_map[data[1]].append(i)
+
+	corr_list = [0.0] * len(drugs)
+	for i, drug in enumerate(drugs):
+		index = pos_map[drug]
+		x = np.take(pred, index)
+		y = np.take(label, index)
+		if np.all(x == x[0]):
+			corr = 0.0
+		else:
+			corr = stats.spearmanr(x, y)[0]
+		corr_list[i] = corr
+
+	return np.median(corr_list)
 
 
 def calc_std_vals(df, zscore_method):

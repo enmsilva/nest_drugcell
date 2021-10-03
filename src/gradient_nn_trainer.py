@@ -20,7 +20,7 @@ class GradientNNTrainer(NNTrainer):
 	def train_model(self):
 
 		epoch_start_time = time.time()
-		model_scores = []
+		max_corr = 0.0
 
 		train_feature, train_label, val_feature, val_label = self.data_wrapper.prepare_train_data()
 
@@ -34,8 +34,8 @@ class GradientNNTrainer(NNTrainer):
 
 		train_label_gpu = Variable(train_label.cuda(self.data_wrapper.cuda))
 		val_label_gpu = Variable(val_label.cuda(self.data_wrapper.cuda))
-		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
-		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
+		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=True)
+		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=True)
 
 		optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.lr, betas=(0.9, 0.99), eps=1e-05, weight_decay=self.data_wrapper.wd)
 		optimizer.zero_grad()
@@ -45,7 +45,6 @@ class GradientNNTrainer(NNTrainer):
 			self.model.train()
 			train_predict = torch.zeros(0, 0).cuda(self.data_wrapper.cuda)
 			_gradnorms = torch.empty(len(train_loader)).cuda(self.data_wrapper.cuda) # tensor for accumulating grad norms from each batch in this epoch
-			epoch_scores = []
 
 			for i, (inputdata, labels) in enumerate(train_loader):
 				# Convert torch tensor to Variable
@@ -82,7 +81,7 @@ class GradientNNTrainer(NNTrainer):
 				optimizer.step()
 
 			gradnorms = sum(_gradnorms).unsqueeze(0).cpu().numpy()[0] # Save total gradnorm for epoch
-			train_corr = util.pearson_corr(train_predict, train_label_gpu)
+			train_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
 
 			self.model.eval()
 
@@ -99,39 +98,15 @@ class GradientNNTrainer(NNTrainer):
 				else:
 					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim=0)
 
-			val_corr = util.pearson_corr(val_predict, val_label_gpu)
-			if torch.isnan(val_corr):
-				val_corr = 0.0
+			train_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
 
-			epoch_scores.append(gradnorms)
-			epoch_scores.append(val_corr)
-			model_scores.append(epoch_scores)
-			model_scores = self.calc_pareto_front(model_scores)
+			if val_corr >= max_corr:
+				max_corr = val_corr
+				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
+				print("Model saved at epoch {}".format(epoch))
 
 			epoch_end_time = time.time()
 			print("epoch {}\ttrain_corr {:.3f}\tval_corr {:.3f}\ttotal_loss {:.3f}\tgrad_norm {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, gradnorms, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
 
-		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
-
-		return model_scores[-1]
-
-
-	# Calculate Pareto front for gradient norm and validation correlation
-	# scores is an [Nx2] vector where the 1st column is gradient norm
-	def calc_pareto_front(self, scores):
-		if len(scores) <= 1:
-			return scores
-
-		vec_len = len(scores)
-		vec_ids = np.arange(vec_len)
-		pareto_front = np.ones(vec_len, dtype=bool)
-		for i in range(vec_len):
-			for j in range(vec_len):
-				if i == j:
-					continue
-				if (scores[j][0] <= scores[i][0] and scores[j][1] > scores[i][1]) or (scores[j][0] < scores[i][0] and scores[j][1] >= scores[i][1]):
-					pareto_front[i] = 0
-					break
-		pareto_ids = vec_ids[pareto_front]
-		return [scores[i] for i in pareto_ids]
+		return max_corr

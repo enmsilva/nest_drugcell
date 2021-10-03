@@ -36,8 +36,8 @@ class NNTrainer():
 
 		train_label_gpu = Variable(train_label.cuda(self.data_wrapper.cuda))
 		val_label_gpu = Variable(val_label.cuda(self.data_wrapper.cuda))
-		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
-		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
+		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=True)
+		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=True)
 
 		optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.lr, betas=(0.9, 0.99), eps=1e-05, weight_decay=self.data_wrapper.wd)
 		optimizer.zero_grad()
@@ -84,7 +84,7 @@ class NNTrainer():
 
 				self.update_variance(term_mask_map)
 
-			train_corr = util.pearson_corr(train_predict, train_label_gpu)
+			train_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
 
 			self.model.eval()
 
@@ -101,16 +101,16 @@ class NNTrainer():
 				else:
 					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim=0)
 
-			val_corr = util.pearson_corr(val_predict, val_label_gpu)
+			train_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
 
 			if val_corr >= max_corr:
 				max_corr = val_corr
+				torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
+				print("Model saved at epoch {}".format(epoch))
 
 			epoch_end_time = time.time()
 			print("epoch {}\ttrain_corr {:.3f}\tval_corr {:.3f}\ttotal_loss {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
-
-		torch.save(self.model, self.data_wrapper.modeldir + '/model_final.pt')
 
 		self.finalize_variance()
 		variance_map, viann_score_map, viann_freq_map = self.calc_feature_importance(term_mask_map)

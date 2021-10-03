@@ -61,6 +61,9 @@ class RLIPPCalculator():
 	def create_drug_corr_map_sorted(self, drug_pos_map):
 		drug_corr_map = {}
 		for d in self.drugs:
+			if len(drug_pos_map[d]) == 0:
+				drug_corr_map[d] = 0.0
+				continue
 			test_vals = np.take(np.array(self.test_df['AUC']), drug_pos_map[d])
 			pred_vals = np.take(self.predicted_vals, drug_pos_map[d])
 			drug_corr_map[d] = stats.spearmanr(test_vals, pred_vals)[0]

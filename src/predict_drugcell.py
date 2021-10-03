@@ -74,7 +74,7 @@ def predict_drugcell(predict_data, gene_dim, drug_dim, model_file, hidden_folder
 			with open(hidden_file, 'ab') as f:
 				np.savetxt(f, hidden_grad.data.cpu().numpy(), '%.4e', delimiter='\t')
 
-	test_corr = util.pearson_corr(test_predict, predict_label_gpu)
+	test_corr = util.get_drug_corr_median(test_predict, predict_label_gpu, inputdata)
 	print("Test pearson corr\t%s\t%.6f" % (model.root, test_corr))
 
 	np.savetxt(result_file + '.txt', test_predict.cpu().numpy(),'%.4e')

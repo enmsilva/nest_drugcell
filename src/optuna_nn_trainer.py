@@ -28,12 +28,11 @@ class OptunaNNTrainer(NNTrainer):
 
 	def setup_trials(self, trial):
 
-		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 3, 4, 5, 6, 8])
-		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
-		self.data_wrapper.wd = trial.suggest_float("weight_decay", 1e-5, 1e-2, log=True)
-		self.data_wrapper.alpha = trial.suggest_categorical("alpha", [0.1, 0.2, 0.3, 0.4, 0.5, 0.8, 1.0])
-		self.data_wrapper.epochs = trial.suggest_int("epochs", 50, 200)
-		self.data_wrapper.zscore_method = trial.suggest_categorical("zscore_method", ["zscore", "robustz", "none"])
+		self.data_wrapper.genotype_hiddens = trial.suggest_categorical("neurons_per_node", [2, 4, 6, 8])
+		self.data_wrapper.lr = trial.suggest_float("learning_rate", 1e-6, 5e-1, log=True)
+		self.data_wrapper.wd = trial.suggest_float("weight_decay", 1e-6, 5e-1, log=True)
+		self.data_wrapper.alpha = trial.suggest_categorical("alpha", [0.2, 0.5, 0.8, 1.0])
+		self.data_wrapper.epochs = trial.suggest_categorical("epochs", [25, 50, 100, 150, 200])
 
 		for key, value in trial.params.items():
 			print("{}: {}".format(key, value))
@@ -58,8 +57,8 @@ class OptunaNNTrainer(NNTrainer):
 
 		train_label_gpu = Variable(train_label.cuda(self.data_wrapper.cuda))
 		val_label_gpu = Variable(val_label.cuda(self.data_wrapper.cuda))
-		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
-		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=False)
+		train_loader = du.DataLoader(du.TensorDataset(train_feature, train_label), batch_size=self.data_wrapper.batchsize, shuffle=True)
+		val_loader = du.DataLoader(du.TensorDataset(val_feature, val_label), batch_size=self.data_wrapper.batchsize, shuffle=True)
 
 		optimizer = torch.optim.AdamW(self.model.parameters(), lr=self.data_wrapper.lr, betas=(0.9, 0.99), eps=1e-05, weight_decay=self.data_wrapper.wd)
 		optimizer.zero_grad()
@@ -103,7 +102,7 @@ class OptunaNNTrainer(NNTrainer):
 
 				optimizer.step()
 
-			train_corr = util.pearson_corr(train_predict, train_label_gpu)
+			train_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
 
 			self.model.eval()
 
@@ -120,7 +119,7 @@ class OptunaNNTrainer(NNTrainer):
 				else:
 					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim=0)
 
-			val_corr = util.pearson_corr(val_predict, val_label_gpu)
+			val_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
 
 			if val_corr >= max_corr:
 				max_corr = val_corr
