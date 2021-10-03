@@ -12,5 +12,5 @@ src/__pycache__/
 rlipp/
 src/copied_notebooks/
 temp/
-archive/
+archive*/
 logs/
