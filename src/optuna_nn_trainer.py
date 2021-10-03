@@ -118,7 +118,7 @@ class OptunaNNTrainer(NNTrainer):
 				else:
 					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim=0)
 
-			val_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
+			val_corr = util.get_drug_corr_median(val_predict, val_label_gpu, inputdata)
 
 			if val_corr >= max_corr:
 				max_corr = val_corr
@@ -126,7 +126,7 @@ class OptunaNNTrainer(NNTrainer):
 			trial.report(val_corr, epoch)
 
 			epoch_end_time = time.time()
-			print("epoch %d\ttrain_corr %.4f\tval_corr %.4f\ttotal_loss %.4f\telapsed_time %s" % (epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
+			print("epoch {}\ttrain_corr {:.5f}\tval_corr {:.5f}\ttotal_loss {:.3f}\telapsed_time {}".format(epoch, train_corr, val_corr, total_loss, epoch_end_time - epoch_start_time))
 			epoch_start_time = epoch_end_time
 
 		# Handle pruning based on the intermediate value.
