@@ -8,6 +8,14 @@ from sklearn.preprocessing import robust_scale
 from sklearn.preprocessing import scale
 from scipy import stats
 
+
+def pearson_corr(x, y):
+	xx = x - torch.mean(x)
+	yy = y - torch.mean(y)
+
+	return torch.sum(xx*yy) / (torch.norm(xx, 2)*torch.norm(yy,2))
+
+
 def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 
 	pred = torch_pred.cpu().numpy()
