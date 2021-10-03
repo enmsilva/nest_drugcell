@@ -23,6 +23,7 @@ def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 	for i, data in enumerate(inputdata):
 		pos_map[data[1]].append(i)
 
+	print(pos_map)
 	corr_list = [0.0] * len(drugs)
 	for i, drug in enumerate(drugs):
 		index = pos_map[drug]
@@ -34,6 +35,7 @@ def get_drug_corr_median(torch_pred, torch_labels, torch_inputdata):
 			corr = stats.spearmanr(x, y)[0]
 		corr_list[i] = corr
 
+	print(corr_list)
 	return np.median(corr_list)
 
 
