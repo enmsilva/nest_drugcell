@@ -101,7 +101,7 @@ class OptunaNNTrainer(NNTrainer):
 
 				optimizer.step()
 
-			train_corr = util.get_drug_corr_median(train_predict, train_label_gpu, inputdata)
+			train_corr = util.get_drug_corr_median(train_predict, train_label_gpu, train_feature)
 
 			self.model.eval()
 
@@ -118,7 +118,7 @@ class OptunaNNTrainer(NNTrainer):
 				else:
 					val_predict = torch.cat([val_predict, aux_out_map['final'].data], dim=0)
 
-			val_corr = util.get_drug_corr_median(val_predict, val_label_gpu, inputdata)
+			val_corr = util.get_drug_corr_median(val_predict, val_label_gpu, val_feature)
 
 			if val_corr >= max_corr:
 				max_corr = val_corr
